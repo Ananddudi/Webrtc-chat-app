@@ -1,0 +1,135 @@
+.message-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 300px;
+  height: 500px;
+  padding-top: 10px;
+  --left-ground: black;
+  --right-ground: rgb(223, 196, 171);
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
+.message-section .message-box {
+  width: 100%;
+}
+
+.message-section .messageInboxes {
+  width: 91%;
+  min-height: 30px;
+  padding: 0 10px;
+  padding-top: 8px;
+  padding-bottom: 6px;
+  border: 1px solid saddlebrown;
+  outline: none;
+  border-radius: 60px;
+  overflow: hidden;
+  margin: 0 10px;
+  margin-bottom: 5px;
+  line-height: 2;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.message-section .messages {
+  height: 100%;
+  padding: 5px 20px;
+  display: flex;
+  color: wheat;
+  flex-direction: column;
+  overflow-y: scroll;
+  gap: 15px;
+}
+
+.message-section .messages::-webkit-scrollbar {
+  width: 0vh;
+}
+.message-section .messages::-webkit-scrollbar-thumb {
+  background-color: wheat;
+}
+.message-section .messages::-webkit-scrollbar-track {
+  background-color: white;
+}
+
+.message-section .messages .left {
+  border-radius: 10px;
+}
+
+.message-section .messages .left > article {
+  position: relative;
+  background-color: var(--left-ground);
+  max-width: 50%;
+  border: 1px solid darksalmon;
+  border-radius: 10px;
+  z-index: -2;
+}
+
+.message-section .messages .left > article div {
+  background-color: var(--left-ground);
+  border-radius: 10px;
+  padding: 7px 10px;
+}
+
+.message-section .messages .left > article::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: -16px;
+  background-color: var(--left-ground);
+  border: 1px solid darksalmon;
+  width: 30px;
+  height: 20px;
+  transform: skew(-40deg, -13deg);
+  transform-origin: bottom left;
+  z-index: -1;
+}
+
+.message-section .messages .right {
+  align-self: flex-end;
+  border-radius: 10px;
+  color: black;
+}
+
+.message-section .messages .right > article {
+  position: relative;
+  background-color: var(--right-ground);
+  border: 1px solid darksalmon;
+  border-radius: 10px;
+  z-index: -2;
+}
+
+.message-section .messages .right > article div {
+  background-color: var(--right-ground);
+  border-radius: 10px;
+  padding: 7px 10px;
+}
+
+.message-section .messages .right > article::after {
+  content: "";
+  position: absolute;
+  bottom: 1px;
+  right: -10px;
+  background-color: var(--right-ground);
+  border: 1px solid darksalmon;
+  width: 30px;
+  height: 20px;
+  transform: skew(25deg, 20deg);
+  transform-origin: bottom left;
+  z-index: -1;
+}
+.message-section .messages .left > article > div > article:nth-child(2),
+.message-section .messages .right > article > div > article:nth-child(2) {
+  width: 50%;
+  padding: 0 2px;
+  margin: 1px;
+  color: white;
+  font-size: small;
+  opacity: 0.7;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.message-section .messages .right > article > div > article:nth-child(2) {
+  color: black;
+}

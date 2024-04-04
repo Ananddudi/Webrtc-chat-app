@@ -1,0 +1,57 @@
+.feedbackPage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+}
+
+.feedbackPage form {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(-1000px);
+  animation: feedform 2s ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes feedform {
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feedbackPage form label {
+  color: wheat;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 4px;
+  font-weight: 900;
+}
+
+.feedbackPage form textarea {
+  border: 2px solid wheat;
+  border-radius: 10px;
+  background: rgb(255, 255, 255, 0.1);
+  outline: none;
+  color: white;
+  padding: 10px;
+  font-size: larger;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.feedbackPage .commonBtn:active {
+  box-shadow: 0 0 20px white;
+}
+
+.feedbackPage .commonBtn {
+  border-color: white;
+}

@@ -1,0 +1,9 @@
+.toastError {
+  color: red;
+  font-weight: 600;
+}
+
+.toastSuccess {
+  color: green;
+  font-weight: 600;
+}

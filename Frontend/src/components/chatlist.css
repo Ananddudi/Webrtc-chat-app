@@ -1,0 +1,124 @@
+.chat-list-container {
+  height: 65vh;
+  overflow-y: scroll;
+  opacity: 0;
+  animation: showlist 200ms ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes showlist {
+  100% {
+    opacity: 1;
+  }
+}
+
+.chat-list-container::-webkit-scrollbar {
+  width: 0vh;
+}
+.chat-list-container::-webkit-scrollbar-thumb {
+  background-color: wheat;
+}
+.chat-list-container::-webkit-scrollbar-track {
+  background-color: white;
+}
+
+.chat-list-container .chat-item {
+  width: 100%;
+  border-top: 1px solid wheat;
+  padding: 15px 0;
+  color: aliceblue;
+  cursor: pointer;
+}
+
+.chat-list-container .chat-item .chat-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 0 20px;
+}
+
+.chat-list-container .chat-item:last-child {
+  border-bottom: 1px solid wheat;
+}
+
+.chat-list-container .chat-item .chat-info img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  contain: fill;
+}
+
+.chat-list-container
+  .chat-item
+  .chat-info
+  .chat-info-two
+  #image-online-icon-show {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  bottom: 6px;
+  left: 38px;
+  background-color: green;
+  border-radius: 50%;
+}
+
+.chat-list-container
+  .chat-item
+  .chat-info
+  .chat-info-two
+  #image-online-icon-show-not-show {
+  display: none;
+}
+
+.chat-list-container .chat-item .chat-info .chat-info-two {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.chat-list-container .chat-item .chat-info .chat-info-two .name-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 50px;
+  text-transform: capitalize;
+}
+
+.chat-list-container
+  .chat-item
+  .chat-info
+  .chat-info-two
+  .name-message
+  > div:first-child {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 900;
+}
+
+.chat-list-container
+  .chat-item
+  .chat-info
+  .chat-info-two
+  .name-message
+  > div:nth-child(2) {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  opacity: 0.7;
+}
+
+.chat-list-container
+  .chat-item
+  .chat-info
+  .chat-info-two
+  .name-message
+  > div:nth-child(2).highlight {
+  font-weight: 800;
+  color: white;
+  opacity: 1;
+  text-shadow: 0 0 10px white;
+}
+
+.chat-list-container .chat-item .chat-info > div:nth-child(2) {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  opacity: 0.7;
+}

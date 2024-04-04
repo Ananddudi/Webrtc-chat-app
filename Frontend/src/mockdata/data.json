@@ -1,0 +1,82 @@
+[
+  {
+    "_id": "66069dbd975de58cc06f7fbd",
+    "fullname": "John doe",
+    "email": "johndoe@gmail.com",
+    "profilepic": "",
+    "available": "y",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f78bd",
+    "fullname": "John doe two",
+    "email": "johntwo@gmail.com",
+    "profilepic": "",
+    "available": "n",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f79bd",
+    "fullname": "John doe three",
+    "email": "johndoethree@gmail.com",
+    "profilepic": "",
+    "available": "y",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f5fbd",
+    "fullname": "John doe four",
+    "email": "johndoefour@gmail.com",
+    "profilepic": "",
+    "available": "n",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f2fbd",
+    "fullname": "John doe five",
+    "email": "johndoefive@gmail.com",
+    "profilepic": "",
+    "available": "n",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f9fbd",
+    "fullname": "John doe six",
+    "email": "johndoesix@gmail.com",
+    "profilepic": "",
+    "available": "y",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f1fbd",
+    "fullname": "John doe seven",
+    "email": "johndoeseven@gmail.com",
+    "profilepic": "",
+    "available": "y",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  },
+  {
+    "_id": "66069dbd975de58cc06f4fbd",
+    "fullname": "John doe eight",
+    "email": "johndoeeight@gmail.com",
+    "profilepic": "",
+    "available": "n",
+    "createdAt": "2024-03-29T10:53:49.479Z",
+    "updatedAt": "2024-03-31T06:42:35.885Z",
+    "__v": 0
+  }
+]
