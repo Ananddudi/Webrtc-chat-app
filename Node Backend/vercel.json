@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "builds": [{ "src": "*.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/api/(.*)", "dest": "server.js" }],
+  "env": {
+    "APP_URL": "https://web-node-chat.vercel.app",
+    "COOKIE_SECRETS": "your_cookie_secrets_here"
+  }
+}
