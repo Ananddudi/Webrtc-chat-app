@@ -21,9 +21,8 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cookie: true,
   cors: {
-    origin: ["http://localhost:3000", process.env.APP_URL],
+    origin: process.env.APP_URL,
     methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
     credentials: true,
   },
 });
