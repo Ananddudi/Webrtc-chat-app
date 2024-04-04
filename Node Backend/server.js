@@ -60,9 +60,10 @@ app.use("/api", messageRouter);
 const live = io.of("/app");
 connection(live);
 
-app.get("/", function (req, res) {
+app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
 app.use("*", (req, res) => {
   res.send("This route does not exist!");
 });
