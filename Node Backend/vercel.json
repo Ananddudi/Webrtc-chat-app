@@ -2,12 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "public/**",
-      "use": "@vercel/static"
-    },
-    {
       "src": "server.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -16,12 +16,16 @@
       "dest": "server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/public/$1"
+      "src": "/",
+      "dest": "public/index.html"
+    },
+    {
+      "src": "/(.+)",
+      "dest": "public/$1"
     }
   ],
   "env": {
-    "PORT": "3006",
+    "PORT": "3009",
     "MONGODB": "mongodb+srv://dummyUser:143143143@chatapp.pgfjr8u.mongodb.net/chat?retryWrites=true&w=majority&appName=ChatApp",
     "PRIVATEKEY": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
     "COOKIE_EXPIRE_TIME": "30",
