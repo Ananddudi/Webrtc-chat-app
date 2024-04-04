@@ -10,10 +10,10 @@
     }
   ],
   "env": {
-    "PORT": 3006,
+    "PORT": "3006",
     "MONGODB": "mongodb+srv://dummyUser:143143143@chatapp.pgfjr8u.mongodb.net/chat?retryWrites=true&w=majority&appName=ChatApp",
     "PRIVATEKEY": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-    "COOKIE_EXPIRE_TIME": 30,
+    "COOKIE_EXPIRE_TIME": "30",
     "PASSWORD_HASH": "5457438bfdsgfgzxg",
     "COOKIE_SECRETS": "gfhgjfhj476wsgsg7665",
     "MAIL": "webchatapp09@gmail.com",
