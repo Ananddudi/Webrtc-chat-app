@@ -40,6 +40,7 @@ app.use(
 
 connnectDatabase();
 
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // test route
@@ -59,6 +60,9 @@ app.use("/api", messageRouter);
 const live = io.of("/app");
 connection(live);
 
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 app.use("*", (req, res) => {
   res.send("This route does not exist!");
 });
