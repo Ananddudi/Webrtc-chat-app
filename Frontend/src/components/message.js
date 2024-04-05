@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./message.css";
 import { time_formate } from "../services/dateFormate";
 import { socket } from "../services/socket";
@@ -14,8 +14,35 @@ const Message = ({ messages, convId, data, addMessage }) => {
     }
   };
 
-  //   {
-  // }
+  const renderTextOrMedia = (msg) => {
+    let componentToRender;
+    switch (msg.type) {
+      case "audio":
+        componentToRender = (
+          <audio controls>
+            <source src={msg.message} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        );
+        break;
+      case "video":
+        componentToRender = (
+          <video controls>
+            <source src={msg.message} type="video/mp4" />
+            Your browser does not support the video element.
+          </video>
+        );
+        break;
+      case "image":
+        componentToRender = <img src={msg.message} alt={msg.message} />;
+        break;
+      default:
+        componentToRender = msg.message;
+        break;
+    }
+    return componentToRender;
+  };
+
   useEffect(() => {
     const handleMessage = (messageObj) => {
       addMessage(messageObj);
@@ -42,7 +69,7 @@ const Message = ({ messages, convId, data, addMessage }) => {
             >
               <article>
                 <div>
-                  <article>{msg.message}</article>
+                  <article>{renderTextOrMedia(msg)}</article>
                   <article>{time_formate(msg.createdAt)}</article>
                 </div>
               </article>
@@ -61,7 +88,7 @@ const Message = ({ messages, convId, data, addMessage }) => {
           id="msg-box"
           className="messageInboxes"
         />
-        <Media />
+        <Media recieverMail={data.email} convId={convId} />
       </div>
     </section>
   );

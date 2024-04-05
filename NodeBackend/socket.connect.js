@@ -1,4 +1,4 @@
-const { getFile } = require("./socketControllers.js/file");
+const { handleFile } = require("./socketControllers.js/file");
 const {
   connect,
   disconnect,
@@ -38,7 +38,7 @@ function connection(io) {
     // socket.request.headers.cookie
     connect(io, socket, onlineUsers);
     getLastMessage(socket);
-    getFile(socket);
+    handleFile(socket, onlineUsers);
     sendMessage(socket, onlineUsers);
     disconnect(io, socket, onlineUsers);
   });
