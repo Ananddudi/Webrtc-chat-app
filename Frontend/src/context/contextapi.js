@@ -61,15 +61,15 @@ let ContextApiProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    console.log("status", authQuery);
     if (authQuery.isLoading) {
       setLoading(true);
-    } else if (authQuery.isError) {
+    }
+    if (authQuery.isError) {
       setAuth(null);
       setUsers(Jsondata);
       setLoading(false);
       axiosapi.error("Please login!", "toastError", 2);
-    } else {
+    } else if (authQuery.data) {
       socket.connect();
       setAuth(authQuery.data);
       setLoading(false);

@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     available: {
       type: String,
       enum: ["y", "n"],
-      default: "n",
+      default: "y",
     },
     feedback: {
       type: String,
