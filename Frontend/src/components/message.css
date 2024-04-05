@@ -11,8 +11,81 @@
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 
-.message-section .message-box {
-  width: 100%;
+.message-section .textarea-mediaItems {
+  display: flex;
+}
+
+.message-section .textarea-mediaItems .media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 5px;
+  padding: 10px 5px;
+  border: 1.5px solid wheat;
+  border-radius: 8px;
+  color: wheat;
+  box-shadow: 0 0 5px wheat;
+  font-weight: 700;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  cursor: pointer;
+  background: transparent;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+}
+
+.message-section .textarea-mediaItems .media label {
+  cursor: pointer;
+}
+
+.message-section .textarea-mediaItems .media input {
+  display: none;
+}
+
+.message-section .textarea-mediaItems .media:active,
+.message-section .textarea-mediaItems .media .media-items:active {
+  box-shadow: none;
+  transition: all 50ms ease-in-out;
+}
+
+.message-section .textarea-mediaItems .media .media-items {
+  position: absolute;
+  list-style: none;
+  bottom: 25px;
+  background-color: rgba(0, 0, 0, 0.5);
+  right: 5px;
+  width: 20px;
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+  flex-direction: column;
+  align-items: end;
+  padding: 6px 5px;
+  border: 1.5px solid wheat;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: 0 -1px 5px white;
+  animation: showMedia 200ms ease-in-out;
+  animation-fill-mode: forwards;
+  display: none;
+}
+
+.message-section .textarea-mediaItems .media .media-items.show {
+  display: flex;
+}
+
+@keyframes showMedia {
+  100% {
+    height: 80px;
+  }
+}
+
+.message-section .textarea-mediaItems .media .media-items li {
+  padding: 2px 0;
+}
+
+.message-section .textarea-mediaItems .media .media-items .icons {
+  width: 20px;
+  height: 20px;
 }
 
 .message-section .messageInboxes {

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import "./message.css";
 import { time_formate } from "../services/dateFormate";
 import { socket } from "../services/socket";
+import Media from "./media";
 
 const Message = ({ messages, convId, data, addMessage }) => {
   const viewRef = useRef(null);
@@ -32,9 +33,10 @@ const Message = ({ messages, convId, data, addMessage }) => {
   return (
     <section className="message-section">
       <div className="messages">
-        {messages.map((msg) => {
+        {messages.map((msg, index) => {
           return (
             <div
+              key={index}
               ref={viewRef}
               className={`${msg.position == "L" ? "left" : "right"}`}
             >
@@ -48,16 +50,19 @@ const Message = ({ messages, convId, data, addMessage }) => {
           );
         })}
       </div>
-      <textarea
-        // value={textValue}
-        // onChange={handleTextChange}
-        name="sendmessage"
-        onKeyDown={handleSubmit}
-        rows={1}
-        placeholder="Type message"
-        id="msg-box"
-        className="messageInboxes"
-      />
+      <div className="textarea-mediaItems">
+        <textarea
+          // value={textValue}
+          // onChange={handleTextChange}
+          name="sendmessage"
+          onKeyDown={handleSubmit}
+          rows={1}
+          placeholder="Type message"
+          id="msg-box"
+          className="messageInboxes"
+        />
+        <Media />
+      </div>
     </section>
   );
 };

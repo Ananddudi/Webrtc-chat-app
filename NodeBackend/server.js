@@ -19,6 +19,7 @@ const app = express();
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
+  maxHttpBufferSize: 1e8, // 100 MB
   cookie: true,
   cors: {
     origin: ["http://localhost:3000", process.env.APP_URL],
