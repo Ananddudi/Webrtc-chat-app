@@ -64,6 +64,11 @@ const Chatlist = ({ handleListData }) => {
 
   return (
     <div className="chat-list-container">
+      {filteredList.length == 0 && (
+        <div className="user-not-found">
+          <span>No User Found</span>
+        </div>
+      )}
       {filteredList.map((item) => (
         <article
           key={item._id}

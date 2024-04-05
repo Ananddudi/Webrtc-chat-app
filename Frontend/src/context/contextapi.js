@@ -51,7 +51,7 @@ let ContextApiProvider = ({ children }) => {
     return result.data;
   };
 
-  const { data, status, isFetching } = useQuery({
+  const authQuery = useQuery({
     enabled: load === false ? true : false,
     queryKey: ["auth"],
     queryFn: authorization,
@@ -61,22 +61,20 @@ let ContextApiProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    console.log("status", status);
-    if (isFetching) {
+    console.log("status", authQuery);
+    if (authQuery.isLoading) {
       setLoading(true);
-    }
-    if (status === "error") {
+    } else if (authQuery.isError) {
       setAuth(null);
       setUsers(Jsondata);
       setLoading(false);
       axiosapi.error("Please login!", "toastError", 2);
-    }
-    if (status === "success") {
+    } else {
       socket.connect();
-      setAuth(data);
+      setAuth(authQuery.data);
       setLoading(false);
     }
-  }, [status, isFetching]);
+  }, [authQuery]);
 
   useEffect(() => {
     if (socket.connected && !auth) {
