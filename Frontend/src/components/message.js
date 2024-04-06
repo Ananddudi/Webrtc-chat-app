@@ -19,7 +19,7 @@ const Message = ({ messages, convId, data, addMessage }) => {
     switch (msg.type) {
       case "audio":
         componentToRender = (
-          <audio controls>
+          <audio controls className="audioMessage">
             <source src={msg.message} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
@@ -27,14 +27,16 @@ const Message = ({ messages, convId, data, addMessage }) => {
         break;
       case "video":
         componentToRender = (
-          <video controls>
+          <video controls className="videoMessage">
             <source src={msg.message} type="video/mp4" />
             Your browser does not support the video element.
           </video>
         );
         break;
       case "image":
-        componentToRender = <img src={msg.message} alt={msg.message} />;
+        componentToRender = (
+          <img src={msg.message} alt={msg.message} className="imageMessage" />
+        );
         break;
       default:
         componentToRender = msg.message;

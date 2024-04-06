@@ -42,6 +42,7 @@ app.use(
 connnectDatabase();
 
 app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/sharedFiles", express.static(path.join(__dirname, "sharedFiles")));
 
 // test route
 app.get("/api/test", (req, res) => {

@@ -11,8 +11,8 @@ const writeFileAsync = promisify(fs.writeFile);
 
 const newpath = (filename) => {
   const newfilename = uuidv4() + "-" + filename;
-  const filepath = path.join(__dirname, "..", "images", newfilename);
-  const storePath = `${process.env.SERVER_URL}/images/${newfilename}`;
+  const filepath = path.join(__dirname, "..", "sharedFiles", newfilename);
+  const storePath = `${process.env.SERVER_URL}/sharedFiles/${newfilename}`;
   return [filepath, storePath];
 };
 
