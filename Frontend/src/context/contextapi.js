@@ -14,6 +14,7 @@ let ContextApiProvider = ({ children }) => {
   const [users, setUsers] = useState(Jsondata);
   const [search, setSearch] = useState("");
   const [load, setLoad] = useState(true);
+  const [liveChatOffer, setLiveChatOffer] = useState(null);
 
   useEffect(() => {
     let id;
@@ -94,6 +95,7 @@ let ContextApiProvider = ({ children }) => {
       axiosapi.error(message);
     }
 
+    //on more socket listern for live videochat
     socket.on("onlineUsers", updateList);
     socket.on("error", errorMessage);
     return () => {
@@ -117,6 +119,7 @@ let ContextApiProvider = ({ children }) => {
     filteredList,
     setSearch,
     load,
+    liveChatOffer,
   };
 
   return (
