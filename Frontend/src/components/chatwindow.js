@@ -61,7 +61,7 @@ const ChatWindow = ({ data, setSwitched }) => {
 
   const renderChatOrRtc = () => {
     if (goLive) {
-      return <WebRTC />;
+      return <WebRTC data={data} />;
     }
     return (
       <>

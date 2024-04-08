@@ -1,4 +1,5 @@
 const { handleFile } = require("./socketControllers.js/file");
+const { handleConnection } = require("./socketControllers.js/rtc");
 const {
   connect,
   disconnect,
@@ -40,6 +41,7 @@ function connection(io) {
     getLastMessage(socket);
     handleFile(socket, onlineUsers);
     sendMessage(socket, onlineUsers);
+    handleConnection(socket, onlineUsers);
     disconnect(io, socket, onlineUsers);
   });
 }

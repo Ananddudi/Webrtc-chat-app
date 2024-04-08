@@ -1,24 +1,86 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./webrtc.css";
 import { useContenctHook } from "../context/contextapi";
 import axiosapi from "../services/api";
+import { socket } from "../services/socket";
 
-const WebRTC = () => {
-  const { setLoading, liveChatOffer } = useContenctHook();
-  const [localStream, setLocalStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const [peerConnection, setPeerConnection] = useState(null);
+const WebRTC = ({ data }) => {
+  const { setLoading, offers, auth } = useContenctHook();
   const remoteVidRef = useRef();
   const localVidRef = useRef();
+  const localStream = useRef();
+  const remoteStream = useRef();
+  const peerConnection = useRef();
+
+  const handleOffers = () => {
+    if (offers) {
+      if (
+        offers &&
+        offers.answererSdpOffer &&
+        offers.callerEmail === auth.email
+      ) {
+        peerConnection.current.setRemoteDescription(offers.answererSdpOffer);
+      }
+    }
+  };
+
+  const handleIceCandidate = () => {
+    if (offers) {
+      if (
+        offers &&
+        offers.callerIceCandidates.length &&
+        offers.callerEmail === auth.email
+      ) {
+        offers.callerIceCandidates.forEach((candidate) => {
+          peerConnection.current.addIceCandidate(candidate);
+        });
+      }
+
+      if (
+        offers &&
+        offers.callerIceCandidates.length &&
+        offers.callerEmail === auth.email
+      ) {
+        offers.answererIceCandidates.forEach((candidate) => {
+          peerConnection.current.addIceCandidate(candidate);
+        });
+      }
+    }
+  };
+
+  const createOffer = async () => {
+    const offer = await peerConnection.current.createOffer();
+    peerConnection.current.setLocalDescription(offer);
+    socket.emit("add-offer", {
+      sender: auth.email,
+      reciever: data.email,
+      offer,
+    });
+  };
+
+  const createAnswerOffer = async () => {
+    const answerOffer = await peerConnection.current.createAnswer({});
+    await peerConnection.current.setLocalDescription(answerOffer);
+    await peerConnection.current.setRemoteDescription(offers.callerSdpOffer);
+    socket.emit("add-offer", {
+      sender: auth.email,
+      reciever: data.email,
+      offer: answerOffer,
+    });
+  };
 
   const getMediaAndPeers = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       // audio:true
     });
-    setLocalStream(stream);
-    setRemoteStream(new MediaStream());
-    const peerConnect = new RTCPeerConnection({
+
+    localStream.current = stream;
+    remoteStream.current = new MediaStream();
+    localVidRef.current.srcObject = localStream.current;
+    remoteVidRef.current.srcObject = remoteStream.current;
+
+    const peerConnect = await new RTCPeerConnection({
       iceServers: [
         {
           urls: [
@@ -28,80 +90,53 @@ const WebRTC = () => {
         },
       ],
     });
-    setPeerConnection(peerConnect);
+    peerConnection.current = peerConnect;
+    localStream.current.getTracks().forEach((track) => {
+      peerConnect.addTrack(track, localStream.current);
+    });
+
+    peerConnect.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("add-ice-candidate", {
+          sender: auth.email,
+          reciever: data.email,
+          iceCandidate: event.candidate,
+        });
+      } else {
+        console.log("Oops: No ice candidate found!");
+      }
+    };
+
+    peerConnect.ontrack = (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.current.addTrack(track, remoteStream.current);
+      });
+    };
+
+    //check if other user is available or not
+    if (data.available === "n") {
+      axiosapi.error("Other user is not Online");
+      return;
+    }
+
+    //based on some condition who is caller and who is reciever
+    if (!offers) {
+      await createOffer();
+    } else {
+      await createAnswerOffer();
+    }
   };
 
   useEffect(() => {
-    if (remoteStream) {
-      remoteVidRef.current.srcObject = remoteStream;
-    }
-  }, [remoteStream]);
-
-  useEffect(() => {
-    if (localStream) {
-      if (peerConnection) {
-        localStream.getTracks().forEach((track) => {
-          peerConnection.addTrack(track, localStream);
-        });
-      }
-      localVidRef.current.srcObject = localStream;
-    }
-  }, [localStream, peerConnection]);
-
-  useEffect(() => {
-    if (peerConnection) {
-      const handleIceCandidate = (event) => {
-        if (event.candidate) {
-          //fire socket to store id candidate with this username
-          // peerConnection.close(); // to close call
-        } else {
-          console.log("Oops: No ice candidate found!");
-        }
-      };
-
-      const handleTrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-          remoteStream.addTrack(track, remoteStream);
-        });
-      };
-
-      peerConnection.addEventListener("icecandidate", handleIceCandidate);
-      peerConnection.addEventListener("track", handleTrack);
-
-      return () => {
-        peerConnection.removeEventListener("icecandidate", handleIceCandidate);
-        peerConnection.removeEventListener("track", handleTrack);
-      };
-    }
-  }, [peerConnection]);
+    handleOffers();
+    handleIceCandidate();
+  }, [offers]);
 
   useEffect(() => {
     setLoading(true);
     axiosapi.success("Please wait while we connect!", "", 6);
     getMediaAndPeers();
   }, []);
-
-  const createOfferOrGetOffer = async () => {
-    if (peerConnection) {
-      if (!liveChatOffer) {
-        // if liveChatAnswerer is false then it is calling
-        //create offer and send to reciever
-        const offer = await peerConnection.createOffer();
-        peerConnection.setLocalDescription(offer);
-        //make socket call to backend for registering offer
-      } else {
-        // if liveChatAnswerer is true means it get call from remote
-        await peerConnection.setRemoteDescription(liveChatOffer);
-        const answerOffer = await peerConnection.createAnswer({});
-        peerConnection.setLocalDescription(answerOffer);
-        //now add ice candidate from both side and setRemoteDescription
-      }
-    }
-  };
-
-  useEffect(() => {
-    createOfferOrGetOffer();
-  }, [liveChatOffer, peerConnection]);
 
   return (
     <div className="live-video-page">
@@ -111,17 +146,13 @@ const WebRTC = () => {
           id="remote-video"
           ref={remoteVidRef}
           autoPlay
-        >
-          {/* <source src={videofile} type="video/mp4" /> */}
-        </video>
+        ></video>
         <video
           className="local-video-player"
           id="local-video"
           autoPlay
           ref={localVidRef}
-        >
-          {/* <source src={videofile} type="video/mp4" /> */}
-        </video>
+        ></video>
       </div>
     </div>
   );

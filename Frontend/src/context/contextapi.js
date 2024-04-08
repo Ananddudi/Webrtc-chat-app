@@ -4,17 +4,17 @@ import validator from "validator";
 import axiosapi from "../services/api";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/loader";
-import Jsondata from "../mockdata/data.json";
+import mockdata from "../mockdata/data.json";
 
 export let ContextApi = createContext();
 
 let ContextApiProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState(Jsondata);
+  const [users, setUsers] = useState(mockdata);
   const [search, setSearch] = useState("");
   const [load, setLoad] = useState(true);
-  const [liveChatOffer, setLiveChatOffer] = useState(null);
+  const [offers, setOffers] = useState(null);
 
   useEffect(() => {
     let id;
@@ -67,7 +67,7 @@ let ContextApiProvider = ({ children }) => {
     }
     if (authQuery.isError) {
       setAuth(null);
-      setUsers(Jsondata);
+      setUsers(mockdata);
       setLoading(false);
       axiosapi.error("Please login!", "toastError", 2);
     } else if (authQuery.data) {
@@ -95,10 +95,15 @@ let ContextApiProvider = ({ children }) => {
       axiosapi.error(message);
     }
 
-    //on more socket listern for live videochat
+    function handleOffer(newoffer) {
+      setOffers(newoffer);
+    }
+
+    socket.on("recieve-offer", handleOffer);
     socket.on("onlineUsers", updateList);
     socket.on("error", errorMessage);
     return () => {
+      socket.off("recieve-offer", handleOffer);
       socket.off("onlineUsers", updateList);
       socket.off("error", errorMessage);
     };
@@ -119,7 +124,8 @@ let ContextApiProvider = ({ children }) => {
     filteredList,
     setSearch,
     load,
-    liveChatOffer,
+    offers,
+    setOffers,
   };
 
   return (
