@@ -30,7 +30,7 @@ const io = new Server(httpServer, {
     origin: [
       "http://localhost:3000",
       process.env.APP_URL,
-      "https://192.168.42.174:3000",
+      "https://192.168.42.88:3000",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],

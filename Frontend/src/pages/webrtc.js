@@ -50,18 +50,27 @@ const WebRTC = () => {
 
   useEffect(() => {
     if (peerConnection) {
-      peerConnection.onicecandidate = (event) => {
+      const handleIceCandidate = (event) => {
         if (event.candidate) {
           //fire socket to store id candidate with this username
+          // peerConnection.close(); // to close call
         } else {
           console.log("Oops: No ice candidate found!");
         }
       };
 
-      peerConnection.ontrack = (event) => {
+      const handleTrack = (event) => {
         event.streams[0].getTracks().forEach((track) => {
           remoteStream.addTrack(track, remoteStream);
         });
+      };
+
+      peerConnection.addEventListener("icecandidate", handleIceCandidate);
+      peerConnection.addEventListener("track", handleTrack);
+
+      return () => {
+        peerConnection.removeEventListener("icecandidate", handleIceCandidate);
+        peerConnection.removeEventListener("track", handleTrack);
       };
     }
   }, [peerConnection]);
@@ -81,11 +90,11 @@ const WebRTC = () => {
         peerConnection.setLocalDescription(offer);
         //make socket call to backend for registering offer
       } else {
+        // if liveChatAnswerer is true means it get call from remote
         await peerConnection.setRemoteDescription(liveChatOffer);
         const answerOffer = await peerConnection.createAnswer({});
         peerConnection.setLocalDescription(answerOffer);
-
-        // if liveChatAnswerer is true means it get call from remote
+        //now add ice candidate from both side and setRemoteDescription
       }
     }
   };
