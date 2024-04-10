@@ -1,19 +1,6 @@
 const { formatter } = require("../error");
 const { parsetoken } = require("../utils/parseToken");
 const parseCookie = require("../utils/parseCookie");
-const {
-  addOrUpdateOffer,
-  addOrUpdateCandidate,
-} = require("../controllers/rtc.js");
-
-// {
-//   callerEmail: "",
-//   answererEmail: "",
-//   callerSdpOffer: "",
-//   answererSdpOffer: "",
-//   callerIceCandidates: "",
-//   answererIceCandidates: "",
-// }
 
 const handleConnection = (socket, onlineUsers) => {
   socket.on("initiate-connection", async ({ reciever, sendTo }) => {
