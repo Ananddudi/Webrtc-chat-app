@@ -1,5 +1,6 @@
 .chat-list-container {
-  height: 65vh;
+  position: relative;
+  height: 100%;
   overflow-y: scroll;
   opacity: 0;
   animation: showlist 200ms ease-in-out;

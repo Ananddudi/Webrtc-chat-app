@@ -9,6 +9,7 @@ const addOrUpdateOffer = async ({ sender, reciever, offer }) => {
     ],
   });
 
+  console.log("model is empty", model);
   if (!model) {
     model = await connectionModel.create({
       callerEmail: sender,
@@ -22,6 +23,7 @@ const addOrUpdateOffer = async ({ sender, reciever, offer }) => {
     model.answererSdpOffer = offer;
   }
   model.save();
+  console.log("model here", JSON.stringify(model.toObject()));
   return model.toObject();
 };
 
@@ -32,6 +34,7 @@ const addOrUpdateCandidate = async ({ sender, reciever, iceCandidate }) => {
       { $and: [{ callerEmail: reciever }, { answererEmail: sender }] },
     ],
   });
+
   if (model.callerEmail == sender) {
     model.callerIceCandidates.push(iceCandidate);
   } else {
@@ -41,7 +44,17 @@ const addOrUpdateCandidate = async ({ sender, reciever, iceCandidate }) => {
   return model.toObject();
 };
 
+const removeOffer = async ({ sender, reciever }) => {
+  await connectionModel.findOneAndDelete({
+    $or: [
+      { $and: [{ callerEmail: sender }, { answererEmail: reciever }] },
+      { $and: [{ callerEmail: reciever }, { answererEmail: sender }] },
+    ],
+  });
+};
+
 module.exports = {
   addOrUpdateOffer,
   addOrUpdateCandidate,
+  removeOffer,
 };

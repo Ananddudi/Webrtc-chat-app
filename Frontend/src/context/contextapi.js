@@ -14,7 +14,10 @@ let ContextApiProvider = ({ children }) => {
   const [users, setUsers] = useState(mockdata);
   const [search, setSearch] = useState("");
   const [load, setLoad] = useState(true);
-  const [offers, setOffers] = useState(null);
+  const [callMode, setCallMode] = useState({
+    mode: "",
+    data: {},
+  });
 
   useEffect(() => {
     let id;
@@ -94,16 +97,18 @@ let ContextApiProvider = ({ children }) => {
     function errorMessage(message) {
       axiosapi.error(message);
     }
+    const handleConnect = ({ reciever }) => {
+      setCallMode({
+        mode: "hold",
+        data: reciever,
+      });
+    };
 
-    function handleOffer(newoffer) {
-      setOffers(newoffer);
-    }
-
-    socket.on("recieve-offer", handleOffer);
     socket.on("onlineUsers", updateList);
     socket.on("error", errorMessage);
+    socket.on("connection-request", handleConnect);
     return () => {
-      socket.off("recieve-offer", handleOffer);
+      socket.off("connection-request", handleConnect);
       socket.off("onlineUsers", updateList);
       socket.off("error", errorMessage);
     };
@@ -124,8 +129,8 @@ let ContextApiProvider = ({ children }) => {
     filteredList,
     setSearch,
     load,
-    offers,
-    setOffers,
+    callMode,
+    setCallMode,
   };
 
   return (

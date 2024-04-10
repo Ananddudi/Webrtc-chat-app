@@ -39,8 +39,14 @@
   width: 100%;
 }
 .chat-list-header .profile-info-video .live-video-icon {
-  width: 100px;
-  display: inline-block;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.chat-list-header .profile-info-video .live-video-icon .go-live-ans {
+  width: 40px;
 }
 
 .chat-list-header .profile-info-video .live-video-icon .go-live {

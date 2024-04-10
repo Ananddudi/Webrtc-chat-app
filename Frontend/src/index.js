@@ -30,7 +30,7 @@ function Index() {
 }
 
 root.render(
-  <React.StrictMode>
-    <Index />
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Index />
+  // </React.StrictMode>
 );

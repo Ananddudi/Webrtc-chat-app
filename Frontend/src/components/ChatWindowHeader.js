@@ -3,14 +3,23 @@ import "./chatwindow.css";
 import { IoArrowBack } from "react-icons/io5";
 import { socket } from "../services/socket";
 import Golive from "../statics/goLive.svg";
+import { useContenctHook } from "../context/contextapi";
 
-const ChatWindowHeader = ({ item, setSwitched, setGoLive }) => {
+const ChatWindowHeader = ({ item, setSwitched }) => {
+  const { setCallMode, auth } = useContenctHook();
   const imageurl = item.profilepic
     ? item.profilepic
     : require("../statics/profileImage.jpg");
 
+  const initiateVideCall = () => {
+    socket.emit("initiate-connection", { reciever: auth, sendTo: item.email });
+    setCallMode({
+      mode: "call",
+      data: item,
+    });
+  };
+
   useEffect(() => {
-    // console.log("item", item);
     const userOnline = (email) => {
       if (item.email === email) {
         item.available = "y";
@@ -47,12 +56,14 @@ const ChatWindowHeader = ({ item, setSwitched, setGoLive }) => {
           </div>
         </div>
         <div className="live-video-icon">
-          <img
-            src={Golive}
-            alt="go-live-alt"
-            className="go-live"
-            onClick={() => setGoLive(true)}
-          />
+          {item.available === "y" && (
+            <img
+              src={Golive}
+              alt="go-live-alt"
+              className="go-live"
+              onClick={initiateVideCall}
+            />
+          )}
         </div>
       </section>
     </div>

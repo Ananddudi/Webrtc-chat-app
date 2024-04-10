@@ -1,0 +1,140 @@
+.live-video-page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: white;
+  left: 0;
+  z-index: 1;
+  transform: translateY(-140%);
+  display: none;
+}
+
+.live-video-page.show {
+  display: block;
+  animation: showCall 500ms ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes showCall {
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.live-video-page .call-info {
+  margin-top: 60px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 200px;
+  height: 100%;
+}
+
+.live-video-page .call-info .pick-btn {
+  background: green;
+  border: 1px solid green;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  color: white;
+  font-size: 18px;
+  box-shadow: 0 0 140px white;
+  cursor: pointer;
+}
+
+.live-video-page .call-info .drop-btn {
+  cursor: pointer;
+  background: darkred;
+  border: 1px solid darkred;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  color: white;
+  font-size: 18px;
+  box-shadow: 0 0 140px white;
+}
+
+.live-video-page .call-info .icon {
+  font-size: 36px;
+  margin-top: 5px;
+}
+
+.live-video-page .call-info .pick-btn:active,
+.live-video-page .call-info .drop-btn:active {
+  box-shadow: none;
+  transform: scale(0.9);
+  transition: all 50ms ease-in-out;
+}
+
+.live-video-page .call-info .caller-profile-img {
+  width: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.live-video-page .call-info .caller-name {
+  font-size: 25px;
+  margin-top: 20px;
+  color: #f3da6b;
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+  font-family: "Nosifer", cursive;
+}
+
+.live-video-page .call-info .response-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.live-video-page .end-call {
+  position: absolute;
+  color: white;
+  z-index: 1;
+  bottom: 100px;
+  left: 45%;
+  background: none;
+  border: 2px solid red;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.live-video-page .end-call .end-icon {
+  font-size: 40px;
+  color: white !important;
+}
+
+.live-video-page .end-call:active {
+  transform: scale(0.9);
+  transition: all 50ms ease-out;
+}
+
+.videoWrappers {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.local-video-player {
+  position: absolute;
+  width: 200px;
+  height: 300px;
+  bottom: 0;
+  right: 0;
+  object-fit: cover;
+}
+
+.remote-video-player {
+  position: absolute;
+  width: 100%;
+  object-fit: cover;
+  height: 95%;
+}
