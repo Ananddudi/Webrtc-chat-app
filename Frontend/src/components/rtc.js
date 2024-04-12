@@ -12,22 +12,45 @@ const WebRTC = () => {
   const { auth, callMode, setCallMode } = useContenctHook();
   const remoteVidRef = useRef();
   const localVidRef = useRef();
-  const localStream = useRef();
-  const remoteStream = useRef();
   const peerConnection = useRef();
+  const changeCameraMode = useRef("environment");
 
-  const getMediaAndPeers = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
+  const changeCMode = async () => {
+    if (changeCameraMode.current == "environment") {
+      let localStreams = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" },
+        // audio:true
+      });
+
+      localVidRef.current.srcObject = localStreams;
+      localStreams.getTracks().forEach((track) => {
+        peerConnection.current.addTrack(track, localStreams);
+      });
+      const [videoTrack] = localStreams.getVideoTracks();
+      const sender = peerConnection.current
+        .getSenders()
+        .find((s) => s.track.kind === videoTrack.kind);
+      console.log("Found sender:", sender);
+      sender.replaceTrack(videoTrack);
+    }
+    if (changeCameraMode.current == "user") {
+      changeCameraMode.current = "environment";
+      return;
+    }
+  };
+
+  const getMediaAndPeers = async (cameraMode) => {
+    let localStreams = null;
+    let remoteStream = null;
+    localStreams = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: cameraMode },
       // audio:true
     });
 
-    localStream.current = stream;
-    localVidRef.current.srcObject = stream;
+    localVidRef.current.srcObject = localStreams;
 
-    let rmtStream = new MediaStream();
-    remoteStream.current = rmtStream;
-    remoteVidRef.current.srcObject = rmtStream;
+    remoteStream = new MediaStream();
+    remoteVidRef.current.srcObject = remoteStream;
 
     peerConnection.current = await new RTCPeerConnection({
       iceServers: [
@@ -40,8 +63,8 @@ const WebRTC = () => {
       ],
     });
 
-    localStream.current.getTracks().forEach((track) => {
-      peerConnection.current.addTrack(track, localStream.current);
+    localStreams.getTracks().forEach((track) => {
+      peerConnection.current.addTrack(track, localStreams);
     });
 
     peerConnection.current.onicecandidate = (event) => {
@@ -62,7 +85,7 @@ const WebRTC = () => {
 
     peerConnection.current.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
-        remoteStream.current.addTrack(track, remoteStream.current);
+        remoteStream.addTrack(track, remoteStream);
       });
     };
   };
@@ -95,7 +118,7 @@ const WebRTC = () => {
     };
 
     const handleConnection = async () => {
-      await getMediaAndPeers();
+      await getMediaAndPeers("environment");
       const offer = await peerConnection.current.createOffer();
       await peerConnection.current.setLocalDescription(offer);
       addOffer(offer);
@@ -109,9 +132,16 @@ const WebRTC = () => {
       }
     };
 
+    //In case other use got disconnected
+    const userOffline = (email) => {
+      if (callMode.data.email === email) {
+        endCall("request");
+      }
+    };
+
     const handleOffer = async ({ offer }) => {
       if (callMode.mode == "answer") {
-        await getMediaAndPeers();
+        await getMediaAndPeers("environment");
         await peerConnection.current.setRemoteDescription(offer);
         const answerOffer = await peerConnection.current.createAnswer({});
         await peerConnection.current.setLocalDescription(answerOffer);
@@ -131,8 +161,10 @@ const WebRTC = () => {
     }
 
     socket.on("close-connection-request", () => endCall("request"));
+    socket.on("offline-status", userOffline);
     return () => {
       if (callMode.mode !== "" || callMode.mode !== "hold") {
+        socket.off("offline-status", userOffline);
         socket.off("close-connection-request", handleOffer);
         socket.off("connection-status", handleConnection);
         socket.off("recieve-ice-candidate", handleIceCandidate);
@@ -142,6 +174,7 @@ const WebRTC = () => {
           peerConnection.current.getSenders().forEach((sender) => {
             sender.track.stop();
           });
+          socket.emit("close-connection", { reciever: callMode.data.email });
         }
       }
     };
@@ -187,6 +220,7 @@ const WebRTC = () => {
           localVidRef={localVidRef}
           remoteVidRef={remoteVidRef}
           endCall={() => endCall("response")}
+          changeCMode={changeCMode}
         />
       )}
     </div>

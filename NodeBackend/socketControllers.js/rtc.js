@@ -28,6 +28,7 @@ const handleConnection = (socket, onlineUsers) => {
   socket.on("close-connection", async ({ reciever }) => {
     try {
       const user = onlineUsers.findByUsername(reciever);
+      if (!user.id) return;
       socket.to(user.id).emit("close-connection-request");
     } catch (error) {
       console.log("error in close-connection", error.message);
