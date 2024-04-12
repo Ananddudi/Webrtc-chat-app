@@ -60,6 +60,14 @@
   margin-top: 5px;
 }
 
+.live-video-page .call-info .image-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 25px;
+}
+
 .live-video-page .call-info .pick-btn:active,
 .live-video-page .call-info .drop-btn:active {
   box-shadow: none;
@@ -75,10 +83,7 @@
 
 .live-video-page .call-info .caller-name {
   font-size: 25px;
-  margin-top: 20px;
   color: #f3da6b;
-  width: 100%;
-  text-align: center;
   font-weight: 700;
   font-family: "Nosifer", cursive;
 }

@@ -1,6 +1,6 @@
 const { formatter } = require("../error");
-const { parsetoken } = require("../utils/parseToken");
-const parseCookie = require("../utils/parseCookie");
+// const { parsetoken } = require("../utils/parseToken");
+// const parseCookie = require("../utils/parseCookie");
 
 const handleConnection = (socket, onlineUsers) => {
   socket.on("initiate-connection", async ({ reciever, sendTo }) => {
@@ -35,17 +35,17 @@ const handleConnection = (socket, onlineUsers) => {
     }
   });
 
-  socket.on("add-offer", async ({ sender, reciever, offer }) => {
+  socket.on("add-offer", async ({ reciever, offer }) => {
     try {
       const user = onlineUsers.findByUsername(reciever);
-      socket.to(user.id).emit("recieve-offer", { sender, reciever, offer });
+      socket.to(user.id).emit("recieve-offer", { offer });
     } catch (error) {
       console.log("error in add-offer", error.message);
       formatter.ErrorHandling(socket, error);
     }
   });
 
-  socket.on("add-ice-candidate", async ({ sender, reciever, iceCandidate }) => {
+  socket.on("add-ice-candidate", async ({ reciever, iceCandidate }) => {
     try {
       const user = onlineUsers.findByUsername(reciever);
       socket.to(user.id).emit("recieve-ice-candidate", { iceCandidate });

@@ -9,7 +9,7 @@ import { IoCall } from "react-icons/io5";
 import { MdCallEnd } from "react-icons/md";
 
 const WebRTC = () => {
-  const { setLoading, auth, callMode, setCallMode } = useContenctHook();
+  const { auth, callMode, setCallMode } = useContenctHook();
   const remoteVidRef = useRef();
   const localVidRef = useRef();
   const localStream = useRef();
@@ -52,7 +52,6 @@ const WebRTC = () => {
           iceCandidate: event.candidate,
         });
         socket.emit("add-ice-candidate", {
-          sender: auth.email,
           reciever: callMode.data.email,
           iceCandidate: event.candidate,
         });
@@ -68,84 +67,70 @@ const WebRTC = () => {
     };
   };
 
-  const endCall = () => {
+  const endCall = (mode = "response") => {
+    console.log("callmode", callMode);
     setCallMode({
       mode: "",
       data: {},
     });
-    socket.emit("close-connection", { reciever: callMode.data.email });
+    if (mode == "response") {
+      socket.emit("close-connection", { reciever: callMode.data.email });
+    } else {
+      if (Object.keys(callMode.data).length !== 0) {
+        axiosapi.success(
+          `${
+            callMode.data.fullname ? callMode.data.fullname : "Other user"
+          } has disconnect the call!`
+        );
+      }
+    }
   };
 
   useEffect(() => {
-    const handleClose = () => {
-      setCallMode({
-        mode: "",
-        data: {},
+    const addOffer = (offer) => {
+      socket.emit("add-offer", {
+        reciever: callMode.data.email,
+        offer,
       });
-      axiosapi.success(
-        `${
-          callMode.name ? callMode.name : "Other user"
-        } has disconnect the call!`
-      );
     };
 
     const handleConnection = async () => {
       await getMediaAndPeers();
       const offer = await peerConnection.current.createOffer();
       await peerConnection.current.setLocalDescription(offer);
-      socket.emit("add-offer", {
-        sender: auth.email,
-        reciever: callMode.data.email,
-        offer,
-      });
+      addOffer(offer);
     };
 
     const handleIceCandidate = ({ iceCandidate }) => {
       if (peerConnection.current) {
-        console.log(
-          "lets see singling state",
-          peerConnection.current.signalingState
-        );
         if (peerConnection.current.signalingState !== "closed") {
           peerConnection.current.addIceCandidate(iceCandidate);
         }
       }
     };
 
-    const handleOffer = async ({ sender, reciever, offer }) => {
+    const handleOffer = async ({ offer }) => {
       if (callMode.mode == "answer") {
         await getMediaAndPeers();
         await peerConnection.current.setRemoteDescription(offer);
         const answerOffer = await peerConnection.current.createAnswer({});
         await peerConnection.current.setLocalDescription(answerOffer);
-        socket.emit("add-offer", {
-          sender: auth.email,
-          reciever: callMode.data.email,
-          offer: answerOffer,
-        });
+        addOffer(answerOffer);
       } else if (callMode.mode == "call") {
         await peerConnection.current.setRemoteDescription(offer);
       }
     };
 
     if (callMode.mode !== "" && callMode.mode !== "hold") {
-      setLoading(true);
-      axiosapi.success("Please wait while we connect!", "", 6);
-
+      axiosapi.success("We are connecting", "", 5);
       if (callMode.mode == "call") {
-        if (callMode.data.available === "n") {
-          axiosapi.error("User is not online!", "", 6);
-          // setGoLive("");
-          setLoading(false);
-          return;
-        }
         socket.on("connection-status", handleConnection);
       }
       socket.on("recieve-ice-candidate", handleIceCandidate);
       socket.on("recieve-offer", handleOffer);
     }
 
-    socket.on("close-connection-request", handleClose);
+    socket.on("close-connection-request", () => endCall("request"));
     return () => {
       if (callMode.mode !== "" || callMode.mode !== "hold") {
         socket.off("close-connection-request", handleOffer);
@@ -166,13 +151,19 @@ const WebRTC = () => {
     <div className={`live-video-page ${callMode.mode !== "" && "show"}`}>
       {callMode.mode === "hold" ? (
         <section className="call-info">
-          <div>
+          <div className="image-name">
             <img
-              src={profileImage}
+              src={
+                callMode?.data?.profilepic
+                  ? callMode?.data?.profilepic
+                  : profileImage
+              }
               alt="profileImage-caller"
               className="caller-profile-img"
             />
-            <div className="caller-name">Name</div>
+            <div className="caller-name">
+              {callMode?.data?.fullname ? callMode.data.fullname : "Unknown"}
+            </div>
           </div>
           <div className="response-btn">
             <button
@@ -186,10 +177,7 @@ const WebRTC = () => {
             >
               <IoCall className="icon" />
             </button>
-            <button
-              className="drop-btn"
-              onClick={() => setCallMode({ data: {}, mode: "" })}
-            >
+            <button className="drop-btn" onClick={() => endCall("response")}>
               <MdCallEnd className="icon" />
             </button>
           </div>
@@ -198,7 +186,7 @@ const WebRTC = () => {
         <VideoWrappers
           localVidRef={localVidRef}
           remoteVidRef={remoteVidRef}
-          endCall={endCall}
+          endCall={() => endCall("response")}
         />
       )}
     </div>
