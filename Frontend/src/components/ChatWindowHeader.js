@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./chatwindow.css";
 import { IoArrowBack } from "react-icons/io5";
 import { socket } from "../services/socket";
@@ -7,6 +7,7 @@ import { useContenctHook } from "../context/contextapi";
 
 const ChatWindowHeader = ({ item, setSwitched }) => {
   const { setCallMode, auth } = useContenctHook();
+  const [online, setOnline] = useState(item.available);
   const imageurl = item.profilepic
     ? item.profilepic
     : require("../statics/profileImage.jpg");
@@ -22,12 +23,12 @@ const ChatWindowHeader = ({ item, setSwitched }) => {
   useEffect(() => {
     const userOnline = (email) => {
       if (item.email === email) {
-        item.available = "y";
+        setOnline("y");
       }
     };
     const userOffline = (email) => {
       if (item.email === email) {
-        item.available = "n";
+        setOnline("n");
       }
     };
     socket.on("online-status", userOnline);
@@ -50,13 +51,13 @@ const ChatWindowHeader = ({ item, setSwitched }) => {
           <img src={imageurl} alt={item._id} />
           <div className="info">
             <div>{item.fullname}</div>
-            <div className={item.available === "y" ? "" : "hide"}>
-              {item.available === "y" ? "Online" : "Offline"}
+            <div className={online === "y" ? "" : "hide"}>
+              {online === "y" ? "Online" : "Offline"}
             </div>
           </div>
         </div>
         <div className="live-video-icon">
-          {item.available === "y" && (
+          {online === "y" && (
             <img
               src={Golive}
               alt="go-live-alt"

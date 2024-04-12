@@ -5,7 +5,7 @@ const parseCookie = require("../utils/parseCookie");
 const handleConnection = (socket, onlineUsers) => {
   socket.on("initiate-connection", async ({ reciever, sendTo }) => {
     try {
-      // const token = parseCookie(socket.request);
+      // const token = parseCookie(socket.request); // For cookie based authentication you can use these
       // const sender = parsetoken(token);
       const user = onlineUsers.findByUsername(sendTo);
       socket.to(user.id).emit("connection-request", { reciever });
@@ -17,8 +17,6 @@ const handleConnection = (socket, onlineUsers) => {
 
   socket.on("connection-accepted", async ({ reciever }) => {
     try {
-      // const token = parseCookie(socket.request);
-      // const sender = parsetoken(token);
       const user = onlineUsers.findByUsername(reciever);
       socket.to(user.id).emit("connection-status");
     } catch (error) {
@@ -29,8 +27,6 @@ const handleConnection = (socket, onlineUsers) => {
 
   socket.on("close-connection", async ({ reciever }) => {
     try {
-      // const token = parseCookie(socket.request);
-      // const sender = parsetoken(token);
       const user = onlineUsers.findByUsername(reciever);
       socket.to(user.id).emit("close-connection-request");
     } catch (error) {
@@ -41,8 +37,6 @@ const handleConnection = (socket, onlineUsers) => {
 
   socket.on("add-offer", async ({ sender, reciever, offer }) => {
     try {
-      // const token = parseCookie(socket.request);
-      // const sender = parsetoken(token);
       const user = onlineUsers.findByUsername(reciever);
       socket.to(user.id).emit("recieve-offer", { sender, reciever, offer });
     } catch (error) {
@@ -53,8 +47,6 @@ const handleConnection = (socket, onlineUsers) => {
 
   socket.on("add-ice-candidate", async ({ sender, reciever, iceCandidate }) => {
     try {
-      // const token = parseCookie(socket.request);
-      // const sender = parsetoken(token);
       const user = onlineUsers.findByUsername(reciever);
       socket.to(user.id).emit("recieve-ice-candidate", { iceCandidate });
     } catch (error) {
