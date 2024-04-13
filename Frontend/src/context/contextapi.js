@@ -13,19 +13,11 @@ let ContextApiProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState(mockdata);
   const [search, setSearch] = useState("");
-  const [load, setLoad] = useState(true);
+
   const [callMode, setCallMode] = useState({
     mode: "",
     data: {},
   });
-
-  useEffect(() => {
-    let id;
-    id = setTimeout(() => {
-      setLoad(false);
-    }, 9000);
-    return () => clearTimeout(id);
-  }, [load]);
 
   const formValidation = (key, value) => {
     let result = false;
@@ -56,7 +48,7 @@ let ContextApiProvider = ({ children }) => {
   };
 
   const authQuery = useQuery({
-    enabled: load === false ? true : false,
+    // enabled: load === false ? true : false,
     queryKey: ["auth"],
     queryFn: authorization,
     retry: 1,
@@ -128,7 +120,6 @@ let ContextApiProvider = ({ children }) => {
     users,
     filteredList,
     setSearch,
-    load,
     callMode,
     setCallMode,
   };

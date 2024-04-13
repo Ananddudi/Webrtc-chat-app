@@ -1,7 +1,7 @@
 import ChatHeader from "./components/chatheaders";
 import Header from "./components/header";
 import ChatContainer from "./pages/chatContainer";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { ReactComponent as Svgfile } from "./statics/loading.svg";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MyProfile from "./pages/profile";
@@ -22,16 +22,16 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
-  const { load } = useContenctHook();
+  const [load, setLoad] = useState(true);
   const mainpage = () => {
-    if (load) {
+    if (true) {
       return (
-        <>
+        <main className="first-intro">
           <div className="man1">
             <Svgfile />
           </div>
-          <div className="welcome">Welcome To Anand Dudi App</div>
-        </>
+          <div className="welcome">Your Welcome</div>
+        </main>
       );
     }
     return (
@@ -48,6 +48,14 @@ function App() {
       // </ProtectedRoute>
     );
   };
+
+  useEffect(() => {
+    let id;
+    id = setTimeout(() => {
+      setLoad(false);
+    }, 9000);
+    return () => clearTimeout(id);
+  }, [load]);
 
   return (
     <>

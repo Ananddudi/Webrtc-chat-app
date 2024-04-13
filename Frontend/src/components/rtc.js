@@ -13,81 +13,80 @@ const WebRTC = () => {
   const remoteVidRef = useRef();
   const localVidRef = useRef();
   const peerConnection = useRef();
-  const changeCameraMode = useRef("environment");
 
-  const changeCMode = async () => {
-    if (changeCameraMode.current == "environment") {
-      let localStreams = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        // audio:true
+  async function setCamera(selectedCameras) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: selectedCameras,
+        },
       });
-
-      localVidRef.current.srcObject = localStreams;
-      localStreams.getTracks().forEach((track) => {
-        peerConnection.current.addTrack(track, localStreams);
-      });
-      const [videoTrack] = localStreams.getVideoTracks();
+      const [videoTrack] = stream.getVideoTracks();
+      localVidRef.current.srcObject = stream;
       const sender = peerConnection.current
         .getSenders()
         .find((s) => s.track.kind === videoTrack.kind);
       console.log("Found sender:", sender);
       sender.replaceTrack(videoTrack);
+    } catch (error) {
+      console.log("Error occured while changing camera", error.message);
     }
-    if (changeCameraMode.current == "user") {
-      changeCameraMode.current = "environment";
-      return;
-    }
-  };
+  }
 
-  const getMediaAndPeers = async (cameraMode) => {
-    let localStreams = null;
-    let remoteStream = null;
-    localStreams = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: cameraMode },
-      // audio:true
-    });
-
-    localVidRef.current.srcObject = localStreams;
-
-    remoteStream = new MediaStream();
-    remoteVidRef.current.srcObject = remoteStream;
-
-    peerConnection.current = await new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: [
-            "stun:stun.l.google.com:19302",
-            "stun:stun1.l.google.com:19302",
-          ],
+  const getMediaAndPeers = async () => {
+    try {
+      let localStreams = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment",
         },
-      ],
-    });
-
-    localStreams.getTracks().forEach((track) => {
-      peerConnection.current.addTrack(track, localStreams);
-    });
-
-    peerConnection.current.onicecandidate = (event) => {
-      if (event.candidate) {
-        console.log("ice candidate is", event.candidate, {
-          sender: auth.email,
-          reciever: callMode.data.email,
-          iceCandidate: event.candidate,
-        });
-        socket.emit("add-ice-candidate", {
-          reciever: callMode.data.email,
-          iceCandidate: event.candidate,
-        });
-      } else {
-        console.log("Oops: No ice candidate found!");
-      }
-    };
-
-    peerConnection.current.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remoteStream.addTrack(track, remoteStream);
       });
-    };
+      localVidRef.current.srcObject = localStreams;
+
+      let remoteStream = new MediaStream();
+      remoteVidRef.current.srcObject = remoteStream;
+
+      peerConnection.current = await new RTCPeerConnection({
+        iceServers: [
+          {
+            urls: [
+              "stun:stun.l.google.com:19302",
+              "stun:stun1.l.google.com:19302",
+            ],
+          },
+        ],
+      });
+
+      localStreams.getTracks().forEach((track) => {
+        peerConnection.current.addTrack(track, localStreams);
+      });
+
+      peerConnection.current.onicecandidate = (event) => {
+        if (event.candidate) {
+          console.log("ice candidate is", event.candidate, {
+            sender: auth.email,
+            reciever: callMode.data.email,
+            iceCandidate: event.candidate,
+          });
+          socket.emit("add-ice-candidate", {
+            reciever: callMode.data.email,
+            iceCandidate: event.candidate,
+          });
+        } else {
+          console.log("Oops: No ice candidate found!");
+        }
+      };
+
+      peerConnection.current.ontrack = (event) => {
+        event.streams[0].getTracks().forEach((track) => {
+          remoteStream.addTrack(track, remoteStream);
+        });
+      };
+    } catch (error) {
+      console.log(
+        "Error occured while getting and setting media,peers",
+        error.message
+      );
+    }
   };
 
   const endCall = (mode = "response") => {
@@ -110,74 +109,78 @@ const WebRTC = () => {
   };
 
   useEffect(() => {
-    const addOffer = (offer) => {
-      socket.emit("add-offer", {
-        reciever: callMode.data.email,
-        offer,
-      });
-    };
+    try {
+      const addOffer = (offer) => {
+        socket.emit("add-offer", {
+          reciever: callMode.data.email,
+          offer,
+        });
+      };
 
-    const handleConnection = async () => {
-      await getMediaAndPeers("environment");
-      const offer = await peerConnection.current.createOffer();
-      await peerConnection.current.setLocalDescription(offer);
-      addOffer(offer);
-    };
+      const handleConnection = async () => {
+        await getMediaAndPeers();
+        const offer = await peerConnection.current.createOffer();
+        await peerConnection.current.setLocalDescription(offer);
+        addOffer(offer);
+      };
 
-    const handleIceCandidate = ({ iceCandidate }) => {
-      if (peerConnection.current) {
-        if (peerConnection.current.signalingState !== "closed") {
-          peerConnection.current.addIceCandidate(iceCandidate);
+      const handleIceCandidate = ({ iceCandidate }) => {
+        if (peerConnection.current) {
+          if (peerConnection.current.signalingState !== "closed") {
+            peerConnection.current.addIceCandidate(iceCandidate);
+          }
         }
-      }
-    };
+      };
 
-    //In case other use got disconnected
-    const userOffline = (email) => {
-      if (callMode.data.email === email) {
-        endCall("request");
-      }
-    };
+      //In case other use got disconnected
+      const userOffline = (email) => {
+        if (callMode.data.email === email) {
+          endCall("request");
+        }
+      };
 
-    const handleOffer = async ({ offer }) => {
-      if (callMode.mode == "answer") {
-        await getMediaAndPeers("environment");
-        await peerConnection.current.setRemoteDescription(offer);
-        const answerOffer = await peerConnection.current.createAnswer({});
-        await peerConnection.current.setLocalDescription(answerOffer);
-        addOffer(answerOffer);
-      } else if (callMode.mode == "call") {
-        await peerConnection.current.setRemoteDescription(offer);
-      }
-    };
+      const handleOffer = async ({ offer }) => {
+        if (callMode.mode == "answer") {
+          await getMediaAndPeers();
+          await peerConnection.current.setRemoteDescription(offer);
+          const answerOffer = await peerConnection.current.createAnswer({});
+          await peerConnection.current.setLocalDescription(answerOffer);
+          addOffer(answerOffer);
+        } else if (callMode.mode == "call") {
+          await peerConnection.current.setRemoteDescription(offer);
+        }
+      };
 
-    if (callMode.mode !== "" && callMode.mode !== "hold") {
-      axiosapi.success("We are connecting", "", 5);
-      if (callMode.mode == "call") {
-        socket.on("connection-status", handleConnection);
+      if (callMode.mode !== "" && callMode.mode !== "hold") {
+        axiosapi.success("We are connecting", "", 5);
+        if (callMode.mode == "call") {
+          socket.on("connection-status", handleConnection);
+        }
+        socket.on("recieve-ice-candidate", handleIceCandidate);
+        socket.on("recieve-offer", handleOffer);
       }
-      socket.on("recieve-ice-candidate", handleIceCandidate);
-      socket.on("recieve-offer", handleOffer);
+
+      socket.on("close-connection-request", () => endCall("request"));
+      socket.on("offline-status", userOffline);
+      return () => {
+        if (callMode.mode !== "" || callMode.mode !== "hold") {
+          socket.off("offline-status", userOffline);
+          socket.off("close-connection-request", handleOffer);
+          socket.off("connection-status", handleConnection);
+          socket.off("recieve-ice-candidate", handleIceCandidate);
+          socket.off("recieve-offer", handleOffer);
+          if (peerConnection?.current) {
+            peerConnection.current.close();
+            peerConnection.current.getSenders().forEach((sender) => {
+              sender.track.stop();
+            });
+            // socket.emit("close-connection", { reciever: callMode.data.email });
+          }
+        }
+      };
+    } catch (error) {
+      console.log("Error occure while connecting", error.message);
     }
-
-    socket.on("close-connection-request", () => endCall("request"));
-    socket.on("offline-status", userOffline);
-    return () => {
-      if (callMode.mode !== "" || callMode.mode !== "hold") {
-        socket.off("offline-status", userOffline);
-        socket.off("close-connection-request", handleOffer);
-        socket.off("connection-status", handleConnection);
-        socket.off("recieve-ice-candidate", handleIceCandidate);
-        socket.off("recieve-offer", handleOffer);
-        if (peerConnection?.current) {
-          peerConnection.current.close();
-          peerConnection.current.getSenders().forEach((sender) => {
-            sender.track.stop();
-          });
-          socket.emit("close-connection", { reciever: callMode.data.email });
-        }
-      }
-    };
   }, [callMode]);
 
   return (
@@ -219,8 +222,8 @@ const WebRTC = () => {
         <VideoWrappers
           localVidRef={localVidRef}
           remoteVidRef={remoteVidRef}
-          endCall={() => endCall("response")}
-          changeCMode={changeCMode}
+          endCall={endCall}
+          setCamera={setCamera}
         />
       )}
     </div>

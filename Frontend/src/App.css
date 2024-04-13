@@ -31,77 +31,58 @@ body {
   background-position: center;
 }
 
-.welcome {
+.first-intro {
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  width: 0ch;
-  top: 50%;
-  left: 50%;
-  height: 5%;
-  margin-top: -80px;
-  margin-left: -155px;
-  font-size: 175%;
-  overflow: hidden;
-  overflow-wrap: break-word;
-  background-color: white;
-  /* border-right: solid darkred;*/
-  animation: typing 3s steps(25);
-  animation-delay: 2.2s;
-  white-space: nowrap;
-  animation-fill-mode: forwards;
-  font-weight: bold;
-  color: PaleVioletRed;
-  font-family: "Bungee Shade", cursive;
+  display: flex;
+  align-items: center;
 }
 
-.loadingWhileFetch {
-  font-size: 175%;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -47px;
-  margin-left: -260px;
+.welcome {
+  width: 0ch;
+  font-size: 60px;
+  overflow: hidden;
+  white-space: nowrap;
   font-weight: bold;
-  color: grey;
+  color: PaleVioletRed;
+  font-family: "Frijole", cursive;
+  animation: typing 3s steps(25);
+  animation-delay: 800ms;
+  animation-fill-mode: forwards;
 }
 
 @keyframes typing {
-  from {
-    /*left: 0;*/
+  0% {
     border-right: solid darkred;
     width: 0ch;
-    /*height: auto;*/
   }
-  to {
-    /*left: 100%;*/
+  99.5% {
     border-right: solid darkred;
-    width: 23ch;
-
-    /*height: 10px;*/
+  }
+  100% {
+    border-right: none;
+    width: 14ch;
   }
 }
 
 .man1 {
-  position: absolute;
-  text-align: left;
-  margin-top: 5%;
-  animation: wholething 2s ease-out;
+  margin-top: 100px;
+  transform: translateX(0px);
+  animation: man 2s ease-out;
   animation-fill-mode: forwards;
 }
 
-@keyframes wholething {
-  0% {
-    transform: translateX(0px);
-  }
+@keyframes man {
   100% {
-    transform: translateX(220px);
+    transform: translateX(50%);
   }
 }
 
 #RightLeg {
   transform-origin: top;
   transform-box: fill-box;
-
-  animation: pedentry 0.6s 3.8 alternate;
+  animation: pedentry 0.5s 4 alternate ease-in-out;
 }
 @keyframes pedentry {
   from {
@@ -111,10 +92,20 @@ body {
     transform: rotateZ(-23deg);
   }
 }
+
 #LeftLeg {
   transform-origin: top;
   transform-box: fill-box;
-  animation: pedentry2 0.6s 3.9 alternate;
+  animation: pedentry2 0.5s 4 alternate ease-in-out;
+}
+
+@keyframes pedentry2 {
+  from {
+    transform: rotateZ(-2deg);
+  }
+  to {
+    transform: rotateZ(20deg);
+  }
 }
 
 #RightHand {
@@ -147,18 +138,15 @@ body {
   }
 }
 
-@keyframes pedentry2 {
-  from {
-    transform: rotateZ(-2deg);
-  }
-  to {
-    transform: rotateZ(20deg);
-  }
-}
-@media (max-width: 800px) {
-  .man1 {
-    display: none;
-  }
+.loadingWhileFetch {
+  font-size: 175%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -47px;
+  margin-left: -260px;
+  font-weight: bold;
+  color: grey;
 }
 
 .navbar {

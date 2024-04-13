@@ -4,8 +4,9 @@ import { MdFlipCameraIos } from "react-icons/md";
 import { BsBack } from "react-icons/bs";
 
 const VideoWrappers = React.forwardRef(
-  ({ localVidRef, remoteVidRef, endCall, changeCMode }, ref) => {
+  ({ localVidRef, remoteVidRef, endCall, setCamera }, ref) => {
     const [changeDisplay, setChangeDisplay] = useState(false);
+    const [currentFacingMode, setCurrentFacingMode] = useState("environment");
     return (
       <>
         <div className="videoWrappers">
@@ -29,7 +30,18 @@ const VideoWrappers = React.forwardRef(
             <button className="end-call" onClick={() => endCall()}>
               <FcEndCall className="end-icon" />
             </button>
-            <button className="camera-mode" onClick={() => changeCMode()}>
+            <button
+              className="camera-mode"
+              onClick={() => {
+                if (currentFacingMode == "environment") {
+                  setCamera("user");
+                  setCurrentFacingMode("user");
+                } else {
+                  setCamera("environment");
+                  setCurrentFacingMode("environment");
+                }
+              }}
+            >
               <MdFlipCameraIos className="camera-mode-icon" />
             </button>
             <button
