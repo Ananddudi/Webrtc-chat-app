@@ -8,12 +8,15 @@ import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import Search from "./search";
+import { RiMenu3Fill } from "react-icons/ri";
+import { MdOutlineRestaurantMenu } from "react-icons/md";
 
 const Header = () => {
   const { auth } = useContenctHook();
-  let [showpopup, setShowpopup] = useState(false);
-  let [loginform, setLoginform] = useState(false);
-  let [login, setLogin] = useState(false);
+  const [showpopup, setShowpopup] = useState(false);
+  const [loginform, setLoginform] = useState(false);
+  const [login, setLogin] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const popups = () => {
     if (showpopup) return <Popup setShowpopup={setShowpopup} />;
@@ -22,6 +25,10 @@ const Header = () => {
   };
 
   const queryClient = useQueryClient();
+
+  const showPhoneMenu = () => {
+    setShowMenu(!showMenu);
+  };
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -33,10 +40,16 @@ const Header = () => {
         if (loginform) setLoginform(false);
         if (showpopup) setShowpopup(false);
       }
+      if (
+        !event.target.closest(".links.show") &&
+        !event.target.closest(".side-menu")
+      ) {
+        if (showMenu) setShowMenu(false);
+      }
     };
 
-    document.addEventListener("click", handleOutsideClick);
-    return () => document.removeEventListener("click", handleOutsideClick);
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
   }, [login, loginform, showpopup]);
 
   const { mutate } = useMutation({
@@ -90,7 +103,7 @@ const Header = () => {
       <nav className="navbar">
         <div className="portion">
           <img className="logo" src={Logo} alt="logo" />
-          <div className="links">
+          <div className={`links ${showMenu ? "show" : "hide"}`}>
             <Link
               to="/"
               onClick={() => setShowpopup(true)}
@@ -103,6 +116,16 @@ const Header = () => {
           </div>
         </div>
         <Search />
+        <div className="side-menu">
+          {showMenu ? (
+            <MdOutlineRestaurantMenu
+              className="menu-icon"
+              onClick={showPhoneMenu}
+            />
+          ) : (
+            <RiMenu3Fill className="menu-icon" onClick={showPhoneMenu} />
+          )}
+        </div>
       </nav>
       {popups()}
     </main>

@@ -1,30 +1,31 @@
 import ChatHeader from "./components/chatheaders";
 import Header from "./components/header";
 import ChatContainer from "./pages/chatContainer";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { ReactComponent as Svgfile } from "./statics/loading.svg";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MyProfile from "./pages/profile";
 import Errors from "./pages/error";
 import "./App.css";
+import "./devices style/app.css";
 import Loader from "./components/loader";
 import Feedback from "./pages/feedback";
 import { useContenctHook } from "./context/contextapi";
+import useScreenSize from "./hooks/useScreenSize";
+import AddingUser from "./components/addingUser";
 
 const PrivateRoute = ({ children }) => {
   const { auth } = useContenctHook();
-
   if (!auth) {
     return <Navigate to="/" />;
   }
-
   return children;
 };
 
 function App() {
-  const [load, setLoad] = useState(true);
+  const { load } = useScreenSize();
   const mainpage = () => {
-    if (true) {
+    if (load) {
       return (
         <main className="first-intro">
           <div className="man1">
@@ -42,20 +43,13 @@ function App() {
           <main className="containerForChat">
             <ChatHeader />
             <ChatContainer />
+            <AddingUser />
           </main>
         </div>
       </div>
       // </ProtectedRoute>
     );
   };
-
-  useEffect(() => {
-    let id;
-    id = setTimeout(() => {
-      setLoad(false);
-    }, 9000);
-    return () => clearTimeout(id);
-  }, [load]);
 
   return (
     <>

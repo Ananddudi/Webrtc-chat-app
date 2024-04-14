@@ -72,7 +72,7 @@ export const ChatHeader = () => {
         </span>
       </button>
       <h3 className="headerBarText">
-        <span>Chat Section</span>
+        <span>{window.innerWidth < 768 ? "Chat" : "Chat Section"}</span>
       </h3>
       {showlist && <AuthMenu />}
     </div>

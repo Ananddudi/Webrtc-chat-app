@@ -40,6 +40,9 @@ body {
 }
 
 .welcome {
+  position: absolute;
+  margin-top: -300px;
+  margin-left: 40%;
   width: 0ch;
   font-size: 60px;
   overflow: hidden;
@@ -50,6 +53,18 @@ body {
   animation: typing 3s steps(25);
   animation-delay: 800ms;
   animation-fill-mode: forwards;
+}
+
+.man1 {
+  margin-top: -150px;
+  transform: translateX(0px);
+  animation: man 2s ease-out;
+  animation-fill-mode: forwards;
+}
+@keyframes man {
+  100% {
+    transform: translateX(55%);
+  }
 }
 
 @keyframes typing {
@@ -63,19 +78,6 @@ body {
   100% {
     border-right: none;
     width: 14ch;
-  }
-}
-
-.man1 {
-  margin-top: 100px;
-  transform: translateX(0px);
-  animation: man 2s ease-out;
-  animation-fill-mode: forwards;
-}
-
-@keyframes man {
-  100% {
-    transform: translateX(50%);
   }
 }
 
@@ -242,8 +244,13 @@ body {
   opacity: 1;
 }
 
+.side-menu {
+  display: none;
+}
+
 /*for search*/
 .search {
+  margin-right: 50px;
   font-size: larger;
   font-family: "Rampart One", cursive;
   display: flex;
@@ -273,7 +280,7 @@ body {
 .containerForChat {
   position: relative;
   width: 32%;
-  min-height: 650px;
+  height: 650px;
   margin-top: 3%;
   background-color: rgba(0, 0, 0, 0.83);
   box-shadow: 2px 2px 20px black;
@@ -347,7 +354,7 @@ body {
 }
 
 .addUserIcon {
-  bottom: 100px;
+  bottom: 50px;
   right: 30px;
   position: absolute;
   color: white;

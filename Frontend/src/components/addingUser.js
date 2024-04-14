@@ -9,6 +9,7 @@ const AddingUser = () => {
   const [closeAnim, setCloseAnim] = useState(false);
   let [adduser, setAdduser] = useState(false);
   const [disable, setDisable] = useState(false);
+
   const { formValidation } = useContenctHook();
 
   const close = () => {
@@ -71,17 +72,15 @@ const AddingUser = () => {
     return () => document.removeEventListener("click", handleOutsideClick);
   }, [adduser]);
 
+  const handleAnimation = (e) => {
+    setAdduser(true);
+    setCloseAnim(false);
+  };
+
   if (!adduser) {
     return (
       <>
-        <FcInvite
-          onClick={() => {
-            setAdduser(true);
-            setCloseAnim(false);
-          }}
-          className="addUserIcon"
-        />
-        {/* <span class="tooltip">Tooltip text here</span> */}
+        <FcInvite onClick={handleAnimation} className="addUserIcon" />
       </>
     );
   }

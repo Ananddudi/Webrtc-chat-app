@@ -1,0 +1,228 @@
+/* Media query for laptops */
+@media only screen and (min-width: 1024px) and (max-width: 1440px) {
+  .welcome {
+    font-size: 45px;
+  }
+  .man1 {
+    animation: man 2s ease-out;
+    animation-fill-mode: forwards;
+  }
+  @keyframes man {
+    100% {
+      transform: translateX(38%);
+    }
+  }
+  .containerForChat {
+    height: 550px;
+    width: 38%;
+  }
+  .headerBarText {
+    width: 83%;
+  }
+  .chat-list-container .chat-item .chat-info img {
+    width: 40px;
+    height: 40px;
+  }
+  .chat-list-container .chat-item .chat-info .chat-info-two .name-message {
+    height: 40px;
+  }
+  .chat-list-container
+    .chat-item
+    .chat-info
+    .chat-info-two
+    .name-message
+    > div:first-child {
+    font-weight: 500;
+  }
+}
+
+/* Media query for iPads */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .welcome {
+    font-size: 35px;
+  }
+  .man1 {
+    animation: man 2s ease-out;
+    animation-fill-mode: forwards;
+  }
+  @keyframes man {
+    100% {
+      transform: translateX(15%);
+    }
+  }
+  #RightLeg {
+    transform-origin: top;
+    transform-box: fill-box;
+    animation: pedentry 0.5s 3 alternate ease-in-out;
+  }
+  @keyframes pedentry {
+    from {
+      transform: rotateZ(5deg);
+    }
+    to {
+      transform: rotateZ(-12deg);
+    }
+  }
+
+  #LeftLeg {
+    transform-origin: top;
+    transform-box: fill-box;
+    animation: pedentry2 0.5s 3 alternate ease-in-out;
+  }
+
+  @keyframes pedentry2 {
+    from {
+      transform: rotateZ(-1deg);
+    }
+    to {
+      transform: rotateZ(10deg);
+    }
+  }
+  .navbar .portion {
+    width: 70%;
+  }
+  .containerForChat {
+    margin-top: 10%;
+    width: 52%;
+  }
+  .popupMain {
+    width: 40%;
+  }
+  .popupText {
+    white-space: nowrap;
+  }
+  .popupImage {
+    display: none;
+  }
+}
+
+/* Media query for phones */
+@media only screen and (max-width: 767px) {
+  .man1 {
+    display: none;
+  }
+  .welcome {
+    font-size: 20px;
+    margin-top: -300px;
+    margin-left: 30%;
+    animation: typing 2s steps(25);
+    animation-delay: 800ms;
+    animation-fill-mode: forwards;
+  }
+
+  .Mainclass {
+    display: block;
+  }
+  .containerForChat {
+    width: 98%;
+    margin: 0 5px;
+    height: 550px;
+    margin-top: 2%;
+  }
+  .headerBarText {
+    width: 72%;
+  }
+  .popupBackground {
+    display: block;
+  }
+  .search {
+    display: none;
+  }
+  .navbar {
+    z-index: 1;
+  }
+  .navbar .links {
+    position: fixed;
+    top: 10vh;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.83);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding-left: 10px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    z-index: 555;
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    overflow: hidden;
+  }
+
+  .navbar .links.show {
+    animation: openMenu 500ms ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  .navbar .links.hide {
+    animation: hideMenu 500ms ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes hideMenu {
+    0% {
+      visibility: visible;
+      width: 80px;
+      height: 190px;
+      padding-right: 20px;
+    }
+    100% {
+      visibility: visible;
+      height: 0;
+      width: 0;
+      padding-right: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes openMenu {
+    100% {
+      visibility: visible;
+      width: 80px;
+      height: 190px;
+      padding-right: 20px;
+    }
+  }
+
+  .navbar .links .profile {
+    margin: 0;
+    padding: 0;
+    text-align: end;
+    padding: 15px 10px;
+    white-space: nowrap;
+  }
+
+  .logo {
+    width: 150px;
+  }
+  .side-menu {
+    display: block;
+    color: white;
+  }
+  .side-menu .menu-icon {
+    color: white;
+    font-size: 26px;
+    margin-right: 20px;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+  .side-menu .menu-icon:active {
+    transform: scale(0.9);
+  }
+}
+
+/* Media query for android */
+@media only screen and (max-width: 567px) {
+  .welcome {
+    margin-left: 20%;
+  }
+}
+
+@keyframes newpopupAnim {
+  100% {
+    transform: scale(1) translateX(-50%) translateY(-100%);
+  }
+}
