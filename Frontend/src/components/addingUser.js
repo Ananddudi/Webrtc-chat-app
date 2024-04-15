@@ -6,21 +6,13 @@ import { wait } from "../services/utils";
 import { useContenctHook } from "../context/contextapi";
 
 const AddingUser = () => {
-  const [closeAnim, setCloseAnim] = useState(false);
   let [adduser, setAdduser] = useState("");
   const [disable, setDisable] = useState(false);
 
   const { formValidation } = useContenctHook();
 
   const close = () => {
-    if (window.innerWidth < 768) {
-      setAdduser("hide");
-    } else {
-      setCloseAnim(true);
-      setTimeout(() => {
-        setAdduser("hide");
-      }, 400);
-    }
+    setAdduser("hide");
   };
 
   const { mutate } = useMutation({
@@ -78,7 +70,6 @@ const AddingUser = () => {
 
   const handleAnimation = (e) => {
     setAdduser("show");
-    setCloseAnim(false);
   };
 
   return (
@@ -86,14 +77,8 @@ const AddingUser = () => {
       {(adduser == "hide" || adduser == "") && (
         <FcInvite onClick={handleAnimation} className="addUserIcon" />
       )}
-      <div
-        className={
-          closeAnim
-            ? "popupBackground close"
-            : `${adduser == "show" && "popupBackground"}`
-        }
-      >
-        <div className={closeAnim ? "popupMain close" : `popupMain ${adduser}`}>
+      <div className={`${adduser == "show" && "popupBackground"}`}>
+        <div className={`popupMain ${adduser}`}>
           <form className="sign-up-form" onSubmit={onSubmit}>
             <div>
               <h1>Invite</h1>

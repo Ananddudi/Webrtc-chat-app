@@ -6,7 +6,6 @@ import axiosapi from "../services/api";
 import { wait } from "../services/utils";
 
 const Login = ({ login, setLogin }) => {
-  const [closeAnim, setCloseAnim] = useState(false);
   const { formValidation } = useContenctHook();
 
   const [searchParams, setSearchParams] = useSearchParams({
@@ -26,15 +25,7 @@ const Login = ({ login, setLogin }) => {
   };
 
   const close = () => {
-    //if form closing in mobile size
-    if (window.innerWidth < 768) {
-      setLogin("hide");
-    } else {
-      setCloseAnim(true);
-      setTimeout(() => {
-        setLogin("hide");
-      }, 400);
-    }
+    setLogin("hide");
   };
 
   const queryClient = useQueryClient();
@@ -105,14 +96,8 @@ const Login = ({ login, setLogin }) => {
   }, [searchParams]);
 
   return (
-    <div
-      className={
-        closeAnim
-          ? "popupBackground close"
-          : `${login == "show" && "popupBackground"}`
-      }
-    >
-      <div className={closeAnim ? "popupMain close" : `popupMain ${login}`}>
+    <div className={`${login == "show" && "popupBackground"}`}>
+      <div className={`popupMain ${login}`}>
         <form
           className={`
           sign-up-form 

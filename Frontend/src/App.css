@@ -384,12 +384,6 @@ body {
   align-items: center;
 }
 
-.popupBackground.close {
-  opacity: 0;
-  transition: all 200ms ease-out;
-  transition-delay: 200ms;
-}
-
 .popupBackground .main-loader {
   display: flex;
   align-items: center;

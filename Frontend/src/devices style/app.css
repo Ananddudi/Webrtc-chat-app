@@ -157,15 +157,40 @@
     animation-fill-mode: forwards;
   }
 
+  .navbar .links.showWithAuth {
+    animation: openMenuWithAuth 500ms ease-out;
+    animation-fill-mode: forwards;
+  }
+
   .navbar .links.hide {
     animation: hideMenu 500ms ease-out;
+  }
+  .navbar .links.hideWithAuth {
+    animation: hideAuth 500ms ease-out;
+  }
+
+  @keyframes hideAuth {
+    0% {
+      visibility: visible;
+      width: 80px;
+      height: 12px;
+      padding-right: 20px;
+    }
+    100% {
+      visibility: visible;
+      height: 0;
+      width: 0;
+      padding-right: 0;
+      opacity: 0;
+      display: none;
+    }
   }
 
   @keyframes hideMenu {
     0% {
       visibility: visible;
       width: 80px;
-      height: 190px;
+      height: 180px;
       padding-right: 20px;
     }
     100% {
@@ -182,7 +207,16 @@
     100% {
       visibility: visible;
       width: 80px;
-      height: 190px;
+      height: 180px;
+      padding-right: 20px;
+    }
+  }
+
+  @keyframes openMenuWithAuth {
+    100% {
+      visibility: visible;
+      width: 80px;
+      height: 120px;
       padding-right: 20px;
     }
   }

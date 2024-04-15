@@ -21,7 +21,18 @@ const Header = () => {
   const queryClient = useQueryClient();
 
   const showPhoneMenu = () => {
-    setShowMenu(showMenu === "show" ? "hide" : "show");
+    let newclass = "";
+    if (auth && (showMenu === "hide" || showMenu === "")) {
+      newclass = "showWithAuth";
+    } else if (!auth && (showMenu === "hide" || showMenu === "")) {
+      newclass = "show";
+    } else if (!auth && showMenu === "show") {
+      newclass = "hide";
+    } else if (auth && showMenu === "show") {
+      newclass = "hideWithAuth";
+    }
+    console.log("check", newclass);
+    setShowMenu(newclass);
   };
 
   useEffect(() => {
@@ -62,10 +73,10 @@ const Header = () => {
   });
 
   useEffect(() => {
-    if (showpopup || login || loginform) {
+    if (showpopup || login || loginform || !auth) {
       setShowMenu("hide");
     }
-  }, [showpopup, login, loginform]);
+  }, [showpopup, login, loginform, auth]);
 
   const Links = memo(() => {
     if (auth) {

@@ -16,7 +16,6 @@ const Signup = ({ loginform, setLoginform }) => {
     email: true,
     password: true,
   });
-  const [closeAnim, setCloseAnim] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -28,15 +27,7 @@ const Signup = ({ loginform, setLoginform }) => {
   };
 
   const close = () => {
-    //if form closing in mobile size
-    if (window.innerWidth < 768) {
-      setLoginform("hide");
-    } else {
-      setCloseAnim(true);
-      setTimeout(() => {
-        setLoginform("hide");
-      }, 400);
-    }
+    setLoginform("hide");
   };
 
   const { mutate } = useMutation({
@@ -121,14 +112,8 @@ const Signup = ({ loginform, setLoginform }) => {
   }, [getParams]);
 
   return (
-    <div
-      className={
-        closeAnim
-          ? "popupBackground close"
-          : `${loginform == "show" && "popupBackground"}`
-      }
-    >
-      <div className={closeAnim ? "popupMain close" : `popupMain ${loginform}`}>
+    <div className={`${loginform == "show" && "popupBackground"}`}>
+      <div className={`popupMain ${loginform}`}>
         <form
           className={`
                   sign-up-form 
