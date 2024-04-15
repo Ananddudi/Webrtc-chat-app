@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import { wait } from "../services/utils";
 
-const Login = ({ setLogin }) => {
+const Login = ({ login, setLogin }) => {
   const [closeAnim, setCloseAnim] = useState(false);
   const { formValidation } = useContenctHook();
 
@@ -26,10 +26,15 @@ const Login = ({ setLogin }) => {
   };
 
   const close = () => {
-    setCloseAnim(true);
-    setTimeout(() => {
-      setLogin(false);
-    }, 400);
+    //if form closing in mobile size
+    if (window.innerWidth < 768) {
+      setLogin("hide");
+    } else {
+      setCloseAnim(true);
+      setTimeout(() => {
+        setLogin("hide");
+      }, 400);
+    }
   };
 
   const queryClient = useQueryClient();
@@ -100,8 +105,14 @@ const Login = ({ setLogin }) => {
   }, [searchParams]);
 
   return (
-    <div className={closeAnim ? "popupBackground close" : "popupBackground"}>
-      <div className={closeAnim ? "popupMain close" : "popupMain"}>
+    <div
+      className={
+        closeAnim
+          ? "popupBackground close"
+          : `${login == "show" && "popupBackground"}`
+      }
+    >
+      <div className={closeAnim ? "popupMain close" : `popupMain ${login}`}>
         <form
           className={`
           sign-up-form 

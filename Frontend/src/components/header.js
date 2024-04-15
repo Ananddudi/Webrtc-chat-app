@@ -13,44 +13,35 @@ import { MdOutlineRestaurantMenu } from "react-icons/md";
 
 const Header = () => {
   const { auth } = useContenctHook();
-  const [showpopup, setShowpopup] = useState(false);
-  const [loginform, setLoginform] = useState(false);
-  const [login, setLogin] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-
-  const popups = () => {
-    if (showpopup) return <Popup setShowpopup={setShowpopup} />;
-    if (loginform) return <Signup setLoginform={setLoginform} />;
-    if (login) return <Login setLogin={setLogin} />;
-  };
+  const [showpopup, setShowpopup] = useState("");
+  const [loginform, setLoginform] = useState("");
+  const [login, setLogin] = useState("");
+  const [showMenu, setShowMenu] = useState("");
 
   const queryClient = useQueryClient();
 
   const showPhoneMenu = () => {
-    setShowMenu(!showMenu);
+    setShowMenu(showMenu === "show" ? "hide" : "show");
   };
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
         !event.target.closest(".popupMain") &&
-        !event.target.closest(".profile")
+        !event.target.closest(".profile") &&
+        !event.target.closest(".side-menu") &&
+        !event.target.closest(".menu-icon")
       ) {
-        if (login) setLogin(false);
-        if (loginform) setLoginform(false);
-        if (showpopup) setShowpopup(false);
-      }
-      if (
-        !event.target.closest(".links.show") &&
-        !event.target.closest(".side-menu")
-      ) {
-        if (showMenu) setShowMenu(false);
+        if (showMenu) setShowMenu("hide");
+        if (login) setLogin("hide");
+        if (loginform) setLoginform("hide");
+        if (showpopup) setShowpopup("hide");
       }
     };
 
     window.addEventListener("click", handleOutsideClick);
     return () => window.removeEventListener("click", handleOutsideClick);
-  }, [login, loginform, showpopup]);
+  }, [login, loginform, showpopup, showMenu]);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -70,6 +61,12 @@ const Header = () => {
     },
   });
 
+  useEffect(() => {
+    if (showpopup || login || loginform) {
+      setShowMenu("hide");
+    }
+  }, [showpopup, login, loginform]);
+
   const Links = memo(() => {
     if (auth) {
       return (
@@ -81,7 +78,7 @@ const Header = () => {
     return (
       <>
         <button
-          onClick={() => setLoginform(true)}
+          onClick={() => setLoginform("show")}
           title="SignUp"
           className="profile"
         >
@@ -89,7 +86,7 @@ const Header = () => {
         </button>
         <button
           title="LogIn"
-          onClick={() => setLogin(true)}
+          onClick={() => setLogin("show")}
           className="profile"
         >
           Log in
@@ -103,10 +100,10 @@ const Header = () => {
       <nav className="navbar">
         <div className="portion">
           <img className="logo" src={Logo} alt="logo" />
-          <div className={`links ${showMenu ? "show" : "hide"}`}>
+          <div className={`links ${showMenu}`}>
             <Link
               to="/"
-              onClick={() => setShowpopup(true)}
+              onClick={() => setShowpopup("show")}
               title="Profile"
               className="profile"
             >
@@ -117,7 +114,7 @@ const Header = () => {
         </div>
         <Search />
         <div className="side-menu">
-          {showMenu ? (
+          {showMenu === "show" ? (
             <MdOutlineRestaurantMenu
               className="menu-icon"
               onClick={showPhoneMenu}
@@ -127,7 +124,9 @@ const Header = () => {
           )}
         </div>
       </nav>
-      {popups()}
+      <Popup showpopup={showpopup} />
+      <Signup loginform={loginform} setLoginform={setLoginform} />
+      <Login login={login} setLogin={setLogin} />
     </main>
   );
 };

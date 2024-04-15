@@ -5,10 +5,12 @@ import axiosapi from "../services/api";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/loader";
 import mockdata from "../mockdata/data.json";
+import useScreenSize from "../hooks/useScreenSize";
 
 export let ContextApi = createContext();
 
 let ContextApiProvider = ({ children }) => {
+  const { load } = useScreenSize();
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState(mockdata);
@@ -48,7 +50,7 @@ let ContextApiProvider = ({ children }) => {
   };
 
   const authQuery = useQuery({
-    // enabled: load === false ? true : false,
+    enabled: load === false ? true : false,
     queryKey: ["auth"],
     queryFn: authorization,
     retry: 1,
