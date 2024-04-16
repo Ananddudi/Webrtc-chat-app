@@ -26,7 +26,6 @@ const WebRTC = () => {
       const sender = peerConnection.current
         .getSenders()
         .find((s) => s.track.kind === videoTrack.kind);
-      console.log("Found sender:", sender);
       sender.replaceTrack(videoTrack);
     } catch (error) {
       console.log("Error occured while changing camera", error.message);
@@ -90,7 +89,6 @@ const WebRTC = () => {
   };
 
   const endCall = (mode = "response") => {
-    console.log("callmode", callMode);
     setCallMode({
       mode: "",
       data: {},
@@ -184,7 +182,7 @@ const WebRTC = () => {
   }, [callMode]);
 
   return (
-    <div className={`live-video-page ${callMode.mode !== "" && "show"}`}>
+    <div className={`live-video-page ${callMode.mode !== "" ? "show" : ""}`}>
       {callMode.mode === "hold" ? (
         <section className="call-info">
           <div className="image-name">

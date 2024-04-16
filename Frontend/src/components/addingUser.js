@@ -77,7 +77,7 @@ const AddingUser = () => {
       {(adduser == "hide" || adduser == "") && (
         <FcInvite onClick={handleAnimation} className="addUserIcon" />
       )}
-      <div className={`${adduser == "show" && "popupBackground"}`}>
+      <div className={`${adduser == "show" ? "popupBackground" : ""}`}>
         <div className={`popupMain ${adduser}`}>
           <form className="sign-up-form" onSubmit={onSubmit}>
             <div>
@@ -95,7 +95,9 @@ const AddingUser = () => {
                   type="submit"
                   value={disable ? "wait" : "Invite"}
                   disabled={disable}
-                  className={`commonBtn profilebtn mg ${disable && "grayout"}`}
+                  className={`commonBtn profilebtn mg ${
+                    disable ? "grayout" : ""
+                  }`}
                 />
               </div>
             </div>

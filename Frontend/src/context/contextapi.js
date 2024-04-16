@@ -59,7 +59,6 @@ let ContextApiProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    console.log("authquery", error, data);
     if (isLoading) {
       setLoading(true);
     }

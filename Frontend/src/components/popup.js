@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Popup = ({ showpopup }) => {
   return (
-    <div className={showpopup === "show" && `popupBackground`}>
+    <div className={showpopup === "show" ? `popupBackground` : ""}>
       <div className={`popupMain ${showpopup}`}>
         <img src={PopupImage} alt="p-image" className="popupImage" />
         <div className="popupText">

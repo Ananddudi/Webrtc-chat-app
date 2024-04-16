@@ -22,16 +22,15 @@ const Header = () => {
 
   const showPhoneMenu = () => {
     let newclass = "";
-    if (auth && (showMenu === "hide" || showMenu === "")) {
+    if (auth && (showMenu === "hideWithAuth" || showMenu === "")) {
       newclass = "showWithAuth";
     } else if (!auth && (showMenu === "hide" || showMenu === "")) {
       newclass = "show";
     } else if (!auth && showMenu === "show") {
       newclass = "hide";
-    } else if (auth && showMenu === "show") {
+    } else if (auth && showMenu === "showWithAuth") {
       newclass = "hideWithAuth";
     }
-    console.log("check", newclass);
     setShowMenu(newclass);
   };
 
@@ -43,7 +42,13 @@ const Header = () => {
         !event.target.closest(".side-menu") &&
         !event.target.closest(".menu-icon")
       ) {
-        if (showMenu) setShowMenu("hide");
+        if (showMenu) {
+          if (!auth) {
+            setShowMenu("hide");
+          } else {
+            setShowMenu("hideWithAuth");
+          }
+        }
         if (login) setLogin("hide");
         if (loginform) setLoginform("hide");
         if (showpopup) setShowpopup("hide");
@@ -73,8 +78,8 @@ const Header = () => {
   });
 
   useEffect(() => {
-    if (showpopup || login || loginform || !auth) {
-      setShowMenu("hide");
+    if (showpopup || login || loginform || auth || !auth) {
+      setShowMenu("");
     }
   }, [showpopup, login, loginform, auth]);
 

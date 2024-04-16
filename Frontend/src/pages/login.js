@@ -96,13 +96,13 @@ const Login = ({ login, setLogin }) => {
   }, [searchParams]);
 
   return (
-    <div className={`${login == "show" && "popupBackground"}`}>
+    <div className={`${login == "show" ? "popupBackground" : ""}`}>
       <div className={`popupMain ${login}`}>
         <form
           className={`
           sign-up-form 
-          ${error.email || "loginEmail"} 
-          ${error.password || "loginPassword"}
+          ${error.email ? "" : "loginEmail"} 
+          ${error.password ? "" : "loginPassword"}
           `}
           onSubmit={onSubmit}
         >
