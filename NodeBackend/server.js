@@ -27,11 +27,7 @@ const io = new Server(httpServer, {
   maxHttpBufferSize: 1e8, // 100 MB
   cookie: true,
   cors: {
-    origin: [
-      "http://localhost:3000",
-      process.env.APP_URL,
-      "https://192.168.42.23:3000",
-    ],
+    origin: ["http://localhost:3000", process.env.APP_URL],
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
