@@ -10,6 +10,8 @@ const AuthMenu = () => {
   const { auth } = useContenctHook();
   const navigate = useNavigate();
 
+  console.log("prints");
+
   const handleFeedback = (e) => {
     if (auth) {
       navigate("/feedback");
@@ -66,14 +68,20 @@ export const ChatHeader = () => {
 
   return (
     <div className="headerSection">
-      <button className="headerbar" onClick={() => setShowlist(!showlist)}>
-        <span>
+      <div className="header">
+        <button
+          className="headerBtn"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowlist(!showlist);
+          }}
+        >
           <FaBars />
-        </span>
-      </button>
-      <h3 className="headerBarText">
-        <span>{window.innerWidth < 768 ? "Chat" : "Chat Section"}</span>
-      </h3>
+        </button>
+        <div className="headerBarText">
+          <span>Chat Section</span>
+        </div>
+      </div>
       {showlist && <AuthMenu />}
     </div>
   );

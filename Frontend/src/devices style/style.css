@@ -114,14 +114,16 @@
     display: block;
   }
   .containerForChat {
-    width: 98%;
+    width: 95%;
     margin: 0 5px;
     height: 550px;
     margin-top: 2%;
   }
-  .headerBarText {
-    width: 72%;
+
+  .headerSection .header .headerBarText span {
+    padding-right: 20px;
   }
+
   .popupBackground {
     display: none;
   }
@@ -257,7 +259,7 @@
   .side-menu .menu-icon {
     color: white;
     font-size: 26px;
-    margin-right: 20px;
+    margin-right: 10px;
     margin-top: 5px;
     cursor: pointer;
   }
@@ -315,6 +317,25 @@
   }
   .popupMain .profileBtnpos {
     padding: 5px;
+  }
+
+  .textProfile div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .textProfile .myname.name,
+  .textProfile .myname.desc {
+    text-align: center;
+  }
+
+  .frontandback {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 }
 
