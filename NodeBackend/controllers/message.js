@@ -58,7 +58,12 @@ const getMessages = async (req, res) => {
   }
 };
 
-const createMessageInSocket = async (convId, message, userId) => {
+const createMessageInSocket = async (
+  convId,
+  message,
+  userId,
+  type = "text"
+) => {
   if (!convId || !message || !userId) {
     const error = new Error("All fields are necessary");
     error.statusCode = 403;
@@ -85,6 +90,7 @@ const createMessageInSocket = async (convId, message, userId) => {
     sender: userId,
     convId,
     message,
+    type,
   });
 
   const {

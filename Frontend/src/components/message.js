@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./message.css";
 import { time_formate } from "../services/dateFormate";
 import { socket } from "../services/socket";
+import Media from "./media";
 
 const Message = ({ messages, convId, data, addMessage }) => {
   const viewRef = useRef(null);
@@ -13,8 +14,37 @@ const Message = ({ messages, convId, data, addMessage }) => {
     }
   };
 
-  //   {
-  // }
+  const renderTextOrMedia = (msg) => {
+    let componentToRender;
+    switch (msg.type) {
+      case "audio":
+        componentToRender = (
+          <audio controls className="audioMessage">
+            <source src={msg.message} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        );
+        break;
+      case "video":
+        componentToRender = (
+          <video controls className="videoMessage">
+            <source src={msg.message} type="video/mp4" />
+            Your browser does not support the video element.
+          </video>
+        );
+        break;
+      case "image":
+        componentToRender = (
+          <img src={msg.message} alt={msg.message} className="imageMessage" />
+        );
+        break;
+      default:
+        componentToRender = msg.message;
+        break;
+    }
+    return componentToRender;
+  };
+
   useEffect(() => {
     const handleMessage = (messageObj) => {
       addMessage(messageObj);
@@ -32,15 +62,16 @@ const Message = ({ messages, convId, data, addMessage }) => {
   return (
     <section className="message-section">
       <div className="messages">
-        {messages.map((msg) => {
+        {messages.map((msg, index) => {
           return (
             <div
+              key={index}
               ref={viewRef}
               className={`${msg.position == "L" ? "left" : "right"}`}
             >
               <article>
                 <div>
-                  <article>{msg.message}</article>
+                  <article>{renderTextOrMedia(msg)}</article>
                   <article>{time_formate(msg.createdAt)}</article>
                 </div>
               </article>
@@ -48,16 +79,19 @@ const Message = ({ messages, convId, data, addMessage }) => {
           );
         })}
       </div>
-      <textarea
-        // value={textValue}
-        // onChange={handleTextChange}
-        name="sendmessage"
-        onKeyDown={handleSubmit}
-        rows={1}
-        placeholder="Type message"
-        id="msg-box"
-        className="messageInboxes"
-      />
+      <div className="textarea-mediaItems">
+        <textarea
+          // value={textValue}
+          // onChange={handleTextChange}
+          name="sendmessage"
+          onKeyDown={handleSubmit}
+          rows={1}
+          placeholder="Type message"
+          id="msg-box"
+          className="messageInboxes"
+        />
+        <Media recieverMail={data.email} convId={convId} />
+      </div>
     </section>
   );
 };

@@ -8,36 +8,56 @@ import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import Search from "./search";
+import { RiMenu3Fill } from "react-icons/ri";
+import { MdOutlineRestaurantMenu } from "react-icons/md";
 
 const Header = () => {
   const { auth } = useContenctHook();
-  let [showpopup, setShowpopup] = useState(false);
-  let [loginform, setLoginform] = useState(false);
-  let [login, setLogin] = useState(false);
-
-  const popups = () => {
-    if (showpopup) return <Popup setShowpopup={setShowpopup} />;
-    if (loginform) return <Signup setLoginform={setLoginform} />;
-    if (login) return <Login setLogin={setLogin} />;
-  };
+  const [showpopup, setShowpopup] = useState("");
+  const [loginform, setLoginform] = useState("");
+  const [login, setLogin] = useState("");
+  const [showMenu, setShowMenu] = useState("");
 
   const queryClient = useQueryClient();
+
+  const showPhoneMenu = () => {
+    let newclass = "";
+    if (auth && (showMenu === "hideWithAuth" || showMenu === "")) {
+      newclass = "showWithAuth";
+    } else if (!auth && (showMenu === "hide" || showMenu === "")) {
+      newclass = "show";
+    } else if (!auth && showMenu === "show") {
+      newclass = "hide";
+    } else if (auth && showMenu === "showWithAuth") {
+      newclass = "hideWithAuth";
+    }
+    setShowMenu(newclass);
+  };
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
         !event.target.closest(".popupMain") &&
-        !event.target.closest(".profile")
+        !event.target.closest(".profile") &&
+        !event.target.closest(".side-menu") &&
+        !event.target.closest(".menu-icon")
       ) {
-        if (login) setLogin(false);
-        if (loginform) setLoginform(false);
-        if (showpopup) setShowpopup(false);
+        if (showMenu) {
+          if (!auth) {
+            setShowMenu("hide");
+          } else {
+            setShowMenu("hideWithAuth");
+          }
+        }
+        if (login) setLogin("hide");
+        if (loginform) setLoginform("hide");
+        if (showpopup) setShowpopup("hide");
       }
     };
 
-    document.addEventListener("click", handleOutsideClick);
-    return () => document.removeEventListener("click", handleOutsideClick);
-  }, [login, loginform, showpopup]);
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, [login, loginform, showpopup, showMenu]);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -57,6 +77,12 @@ const Header = () => {
     },
   });
 
+  useEffect(() => {
+    if (showpopup || login || loginform || auth || !auth) {
+      setShowMenu("");
+    }
+  }, [showpopup, login, loginform, auth]);
+
   const Links = memo(() => {
     if (auth) {
       return (
@@ -68,7 +94,7 @@ const Header = () => {
     return (
       <>
         <button
-          onClick={() => setLoginform(true)}
+          onClick={() => setLoginform("show")}
           title="SignUp"
           className="profile"
         >
@@ -76,7 +102,7 @@ const Header = () => {
         </button>
         <button
           title="LogIn"
-          onClick={() => setLogin(true)}
+          onClick={() => setLogin("show")}
           className="profile"
         >
           Log in
@@ -90,10 +116,10 @@ const Header = () => {
       <nav className="navbar">
         <div className="portion">
           <img className="logo" src={Logo} alt="logo" />
-          <div className="links">
+          <div className={`links ${showMenu}`}>
             <Link
               to="/"
-              onClick={() => setShowpopup(true)}
+              onClick={() => setShowpopup("show")}
               title="Profile"
               className="profile"
             >
@@ -103,8 +129,20 @@ const Header = () => {
           </div>
         </div>
         <Search />
+        <div className="side-menu">
+          {showMenu === "show" ? (
+            <MdOutlineRestaurantMenu
+              className="menu-icon"
+              onClick={showPhoneMenu}
+            />
+          ) : (
+            <RiMenu3Fill className="menu-icon" onClick={showPhoneMenu} />
+          )}
+        </div>
       </nav>
-      {popups()}
+      <Popup showpopup={showpopup} />
+      <Signup loginform={loginform} setLoginform={setLoginform} />
+      <Login login={login} setLogin={setLogin} />
     </main>
   );
 };

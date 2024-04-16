@@ -4,7 +4,7 @@ import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 
-const Signup = ({ setLoginform }) => {
+const Signup = ({ loginform, setLoginform }) => {
   const { formValidation } = useContenctHook();
   const [getParams, setParams] = useSearchParams({
     fullname: "",
@@ -16,7 +16,6 @@ const Signup = ({ setLoginform }) => {
     email: true,
     password: true,
   });
-  const [closeAnim, setCloseAnim] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -28,10 +27,7 @@ const Signup = ({ setLoginform }) => {
   };
 
   const close = () => {
-    setCloseAnim(true);
-    setTimeout(() => {
-      setLoginform(false);
-    }, 400);
+    setLoginform("hide");
   };
 
   const { mutate } = useMutation({
@@ -116,14 +112,14 @@ const Signup = ({ setLoginform }) => {
   }, [getParams]);
 
   return (
-    <div className={closeAnim ? "popupBackground close" : "popupBackground"}>
-      <div className={closeAnim ? "popupMain close" : "popupMain"}>
+    <div className={`popupBackground ${loginform}`}>
+      <div className={`popupMain ${loginform}`}>
         <form
           className={`
                   sign-up-form 
-                  ${error.fullname || "fullname"} 
-                  ${error.email || "signEmail"} 
-                  ${error.password || "signPassword"}
+                  ${!error.fullname ? "fullname" : ""} 
+                  ${error.email ? "" : "signEmail"} 
+                  ${error.password ? "" : "signPassword"}
                   `}
           onSubmit={onSubmit}
         >

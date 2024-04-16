@@ -1,8 +1,9 @@
+const { handleFile } = require("./socketControllers.js/file");
+const { handleConnection } = require("./socketControllers.js/rtc");
 const {
   connect,
   disconnect,
   sendMessage,
-  getList,
   getLastMessage,
 } = require("./socketControllers.js/user");
 
@@ -38,7 +39,9 @@ function connection(io) {
     // socket.request.headers.cookie
     connect(io, socket, onlineUsers);
     getLastMessage(socket);
+    handleFile(socket, onlineUsers);
     sendMessage(socket, onlineUsers);
+    handleConnection(socket, onlineUsers);
     disconnect(io, socket, onlineUsers);
   });
 }

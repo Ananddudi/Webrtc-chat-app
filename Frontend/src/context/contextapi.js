@@ -4,24 +4,22 @@ import validator from "validator";
 import axiosapi from "../services/api";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/loader";
-import Jsondata from "../mockdata/data.json";
+import mockdata from "../mockdata/data.json";
+import useScreenSize from "../hooks/useScreenSize";
 
 export let ContextApi = createContext();
 
 let ContextApiProvider = ({ children }) => {
+  const { load } = useScreenSize();
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState(Jsondata);
+  const [users, setUsers] = useState(mockdata);
   const [search, setSearch] = useState("");
-  const [load, setLoad] = useState(true);
 
-  useEffect(() => {
-    let id;
-    id = setTimeout(() => {
-      setLoad(false);
-    }, 9000);
-    return () => clearTimeout(id);
-  }, [load]);
+  const [callMode, setCallMode] = useState({
+    mode: "",
+    data: {},
+  });
 
   const formValidation = (key, value) => {
     let result = false;
@@ -51,7 +49,7 @@ let ContextApiProvider = ({ children }) => {
     return result.data;
   };
 
-  const { data, status, isFetching } = useQuery({
+  const { data, error, isLoading, isFetching } = useQuery({
     enabled: load === false ? true : false,
     queryKey: ["auth"],
     queryFn: authorization,
@@ -61,22 +59,20 @@ let ContextApiProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    console.log("status", status);
-    if (isFetching) {
+    if (isLoading) {
       setLoading(true);
     }
-    if (status === "error") {
+    if (error) {
       setAuth(null);
-      setUsers(Jsondata);
+      setUsers(mockdata);
       setLoading(false);
       axiosapi.error("Please login!", "toastError", 2);
-    }
-    if (status === "success") {
+    } else if (data) {
       socket.connect();
       setAuth(data);
       setLoading(false);
     }
-  }, [status, isFetching]);
+  }, [error, isLoading, isFetching]);
 
   useEffect(() => {
     if (socket.connected && !auth) {
@@ -95,10 +91,18 @@ let ContextApiProvider = ({ children }) => {
     function errorMessage(message) {
       axiosapi.error(message);
     }
+    const handleConnect = ({ reciever }) => {
+      setCallMode({
+        mode: "hold",
+        data: reciever,
+      });
+    };
 
     socket.on("onlineUsers", updateList);
     socket.on("error", errorMessage);
+    socket.on("connection-request", handleConnect);
     return () => {
+      socket.off("connection-request", handleConnect);
       socket.off("onlineUsers", updateList);
       socket.off("error", errorMessage);
     };
@@ -118,7 +122,8 @@ let ContextApiProvider = ({ children }) => {
     users,
     filteredList,
     setSearch,
-    load,
+    callMode,
+    setCallMode,
   };
 
   return (

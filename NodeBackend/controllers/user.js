@@ -29,7 +29,7 @@ const fileUploadUser = async (req, res) => {
     }
 
     const filename = uuidv4() + "-" + file.name;
-    const filepath = path.join(__dirname, "../images", filename);
+    const filepath = path.join(__dirname, "..", "images", filename);
 
     const storePath = `${process.env.SERVER_URL}/images/${filename}`;
 
