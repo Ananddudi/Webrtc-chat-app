@@ -1,24 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./chatwindow.css";
 import { IoArrowBack } from "react-icons/io5";
 import { socket } from "../services/socket";
 import Golive from "../statics/goLive.svg";
+import { useContenctHook } from "../context/contextapi";
 
-const ChatWindowHeader = ({ item, setSwitched, setGoLive }) => {
+const ChatWindowHeader = ({ item, setSwitched }) => {
+  const { setCallMode, auth } = useContenctHook();
+  const [online, setOnline] = useState(item.available);
   const imageurl = item.profilepic
     ? item.profilepic
     : require("../statics/profileImage.jpg");
 
+  const initiateVideCall = () => {
+    socket.emit("initiate-connection", { reciever: auth, sendTo: item.email });
+    setCallMode({
+      mode: "call",
+      data: item,
+    });
+  };
+
   useEffect(() => {
-    // console.log("item", item);
     const userOnline = (email) => {
       if (item.email === email) {
-        item.available = "y";
+        setOnline("y");
       }
     };
     const userOffline = (email) => {
       if (item.email === email) {
-        item.available = "n";
+        setOnline("n");
       }
     };
     socket.on("online-status", userOnline);
@@ -41,18 +51,20 @@ const ChatWindowHeader = ({ item, setSwitched, setGoLive }) => {
           <img src={imageurl} alt={item._id} />
           <div className="info">
             <div>{item.fullname}</div>
-            <div className={item.available === "y" ? "" : "hide"}>
-              {item.available === "y" ? "Online" : "Offline"}
+            <div className={online === "y" ? "" : "hide"}>
+              {online === "y" ? "Online" : "Offline"}
             </div>
           </div>
         </div>
         <div className="live-video-icon">
-          <img
-            src={Golive}
-            alt="go-live-alt"
-            className="go-live"
-            onClick={() => setGoLive(true)}
-          />
+          {online === "y" && (
+            <img
+              src={Golive}
+              alt="go-live-alt"
+              className="go-live"
+              onClick={initiateVideCall}
+            />
+          )}
         </div>
       </section>
     </div>

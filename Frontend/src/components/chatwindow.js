@@ -4,13 +4,12 @@ import Message from "./message";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import { useContenctHook } from "../context/contextapi";
-import WebRTC from "../pages/webrtc";
+import { socket } from "../services/socket";
 
 const ChatWindow = ({ data, setSwitched }) => {
   const { setLoading, auth } = useContenctHook();
   const [convId, setConvId] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [goLive, setGoLive] = useState(false);
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (postdata) => {
@@ -59,28 +58,17 @@ const ChatWindow = ({ data, setSwitched }) => {
     mutate({ userTwo: data._id });
   }, []);
 
-  const renderChatOrRtc = () => {
-    if (goLive) {
-      return <WebRTC />;
-    }
-    return (
-      <>
-        <ChatWindowHeader
-          item={data}
-          setSwitched={setSwitched}
-          setGoLive={setGoLive}
-        />
-        <Message
-          messages={messages}
-          convId={convId}
-          data={data}
-          addMessage={addMessage}
-        />
-      </>
-    );
-  };
-
-  return <main className="chat-window-main">{renderChatOrRtc()}</main>;
+  return (
+    <main className="chat-window-main">
+      <ChatWindowHeader item={data} setSwitched={setSwitched} />
+      <Message
+        messages={messages}
+        convId={convId}
+        data={data}
+        addMessage={addMessage}
+      />
+    </main>
+  );
 };
 
 export default ChatWindow;

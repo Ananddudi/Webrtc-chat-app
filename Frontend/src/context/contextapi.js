@@ -4,25 +4,22 @@ import validator from "validator";
 import axiosapi from "../services/api";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../components/loader";
-import Jsondata from "../mockdata/data.json";
+import mockdata from "../mockdata/data.json";
+import useScreenSize from "../hooks/useScreenSize";
 
 export let ContextApi = createContext();
 
 let ContextApiProvider = ({ children }) => {
+  const { load } = useScreenSize();
   const [auth, setAuth] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState(Jsondata);
+  const [users, setUsers] = useState(mockdata);
   const [search, setSearch] = useState("");
-  const [load, setLoad] = useState(true);
-  const [liveChatOffer, setLiveChatOffer] = useState(null);
 
-  useEffect(() => {
-    let id;
-    id = setTimeout(() => {
-      setLoad(false);
-    }, 9000);
-    return () => clearTimeout(id);
-  }, [load]);
+  const [callMode, setCallMode] = useState({
+    mode: "",
+    data: {},
+  });
 
   const formValidation = (key, value) => {
     let result = false;
@@ -52,7 +49,7 @@ let ContextApiProvider = ({ children }) => {
     return result.data;
   };
 
-  const authQuery = useQuery({
+  const { data, error, isLoading, isFetching } = useQuery({
     enabled: load === false ? true : false,
     queryKey: ["auth"],
     queryFn: authorization,
@@ -62,20 +59,20 @@ let ContextApiProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    if (authQuery.isLoading) {
+    if (isLoading) {
       setLoading(true);
     }
-    if (authQuery.isError) {
+    if (error) {
       setAuth(null);
-      setUsers(Jsondata);
+      setUsers(mockdata);
       setLoading(false);
       axiosapi.error("Please login!", "toastError", 2);
-    } else if (authQuery.data) {
+    } else if (data) {
       socket.connect();
-      setAuth(authQuery.data);
+      setAuth(data);
       setLoading(false);
     }
-  }, [authQuery]);
+  }, [error, isLoading, isFetching]);
 
   useEffect(() => {
     if (socket.connected && !auth) {
@@ -94,11 +91,18 @@ let ContextApiProvider = ({ children }) => {
     function errorMessage(message) {
       axiosapi.error(message);
     }
+    const handleConnect = ({ reciever }) => {
+      setCallMode({
+        mode: "hold",
+        data: reciever,
+      });
+    };
 
-    //on more socket listern for live videochat
     socket.on("onlineUsers", updateList);
     socket.on("error", errorMessage);
+    socket.on("connection-request", handleConnect);
     return () => {
+      socket.off("connection-request", handleConnect);
       socket.off("onlineUsers", updateList);
       socket.off("error", errorMessage);
     };
@@ -118,8 +122,8 @@ let ContextApiProvider = ({ children }) => {
     users,
     filteredList,
     setSearch,
-    load,
-    liveChatOffer,
+    callMode,
+    setCallMode,
   };
 
   return (

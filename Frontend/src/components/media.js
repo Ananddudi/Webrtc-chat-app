@@ -13,7 +13,6 @@ const Media = ({ recieverMail, convId }) => {
     const reader = new FileReader();
 
     reader.onload = () => {
-      console.log("file", file);
       const base64Data = reader.result.split(",")[1];
       const chunkSize = 1024;
       const totalChunks = Math.ceil(base64Data.length / chunkSize);
@@ -48,7 +47,7 @@ const Media = ({ recieverMail, convId }) => {
   return (
     <button className="media">
       <div onClick={() => setShow(!show)}>Media</div>
-      <ul className={`media-items ${show && "show"}`}>
+      <ul className={`media-items ${show ? "show" : ""}`}>
         <li>
           <label htmlFor="video">
             <Video className="icons" />

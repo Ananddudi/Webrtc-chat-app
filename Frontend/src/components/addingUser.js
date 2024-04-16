@@ -6,16 +6,13 @@ import { wait } from "../services/utils";
 import { useContenctHook } from "../context/contextapi";
 
 const AddingUser = () => {
-  const [closeAnim, setCloseAnim] = useState(false);
-  let [adduser, setAdduser] = useState(false);
+  let [adduser, setAdduser] = useState("");
   const [disable, setDisable] = useState(false);
+
   const { formValidation } = useContenctHook();
 
   const close = () => {
-    setCloseAnim(true);
-    setTimeout(() => {
-      setAdduser(false);
-    }, 400);
+    setAdduser("hide");
   };
 
   const { mutate } = useMutation({
@@ -63,7 +60,7 @@ const AddingUser = () => {
         !event.target.closest(".popupMain") &&
         !event.target.closest(".addUserIcon")
       ) {
-        if (adduser) setAdduser(false);
+        if (adduser === "show") setAdduser("hide");
       }
     };
 
@@ -71,47 +68,43 @@ const AddingUser = () => {
     return () => document.removeEventListener("click", handleOutsideClick);
   }, [adduser]);
 
-  if (!adduser) {
-    return (
-      <>
-        <FcInvite
-          onClick={() => {
-            setAdduser(true);
-            setCloseAnim(false);
-          }}
-          className="addUserIcon"
-        />
-        {/* <span class="tooltip">Tooltip text here</span> */}
-      </>
-    );
-  }
+  const handleAnimation = (e) => {
+    setAdduser("show");
+  };
 
   return (
-    <div className={closeAnim ? "popupBackground close" : "popupBackground"}>
-      <div className={closeAnim ? "popupMain close" : "popupMain"}>
-        <form className="sign-up-form" onSubmit={onSubmit}>
-          <div>
-            <h1>Invite</h1>
-            <p>You can invite you friends and family</p>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Pleae enter your friend email"
-            />
-
-            <div className="btn-center">
+    <>
+      {(adduser == "hide" || adduser == "") && (
+        <FcInvite onClick={handleAnimation} className="addUserIcon" />
+      )}
+      <div className={`popupBackground ${adduser}`}>
+        <div className={`popupMain ${adduser}`}>
+          <form className="sign-up-form" onSubmit={onSubmit}>
+            <div>
+              <h1>Invite</h1>
+              <p>You can invite you friends and family</p>
+              <label htmlFor="email">Email</label>
               <input
-                type="submit"
-                value={disable ? "wait" : "Invite"}
-                disabled={disable}
-                className={`commonBtn profilebtn mg ${disable && "grayout"}`}
+                type="email"
+                name="email"
+                placeholder="Pleae enter your friend email"
               />
+
+              <div className="btn-center">
+                <input
+                  type="submit"
+                  value={disable ? "wait" : "Invite"}
+                  disabled={disable}
+                  className={`commonBtn profilebtn mg ${
+                    disable ? "grayout" : ""
+                  }`}
+                />
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./chatlist.css";
-import AddingUser from "./addingUser";
 import { useContenctHook } from "../context/contextapi";
 import { socket } from "../services/socket";
 import { d_formate } from "../services/dateFormate";
@@ -78,7 +77,6 @@ const Chatlist = ({ handleListData }) => {
           <ListItem item={item} />
         </article>
       ))}
-      <AddingUser />
     </div>
   );
 };
