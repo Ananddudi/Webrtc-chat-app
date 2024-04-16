@@ -24,11 +24,9 @@ const Media = ({ recieverMail, convId }) => {
       return;
     }
 
-    console.log("file ", file);
     const reader = new FileReader();
 
     reader.onload = () => {
-      console.log("reader.result", reader.result);
       const base64Data = reader.result.split(",")[1];
       const chunkSize = 1024;
       const totalChunks = Math.ceil(base64Data.length / chunkSize);

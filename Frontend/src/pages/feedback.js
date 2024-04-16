@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import "./feedback.css";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 

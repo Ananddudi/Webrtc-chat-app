@@ -7,7 +7,7 @@ import Media from "./media";
 const Message = ({ messages, convId, data, addMessage }) => {
   const viewRef = useRef(null);
   const handleSubmit = (e) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       e.preventDefault();
       socket.emit("send-message", convId, data.email, e.target.value);
       e.target.value = "";
@@ -56,18 +56,23 @@ const Message = ({ messages, convId, data, addMessage }) => {
   }, []);
 
   useEffect(() => {
-    viewRef?.current?.scrollIntoView({ behavior: "smooth" });
+    if (viewRef?.current) {
+      viewRef.current.scrollTop = viewRef.current.scrollHeight;
+    }
+    // viewRef?.current?.scrollIntoView({
+    //   behavior: "smooth",
+    //   block: "end",
+    // });
   }, [messages]);
 
   return (
     <section className="message-section">
-      <div className="messages">
+      <div className="messages" ref={viewRef}>
         {messages.map((msg, index) => {
           return (
             <div
               key={index}
-              ref={viewRef}
-              className={`${msg.position == "L" ? "left" : "right"}`}
+              className={`${msg.position === "L" ? "left" : "right"}`}
             >
               <article>
                 <div>
