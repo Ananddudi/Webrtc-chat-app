@@ -337,6 +337,16 @@
     margin-top: 20px;
     margin-bottom: 10px;
   }
+  .chat-window-main {
+    height: 100%;
+  }
+  .message-section {
+    height: 81%;
+  }
+  .message-section .messages .left > article,
+  .message-section .messages .right > article {
+    max-width: 250px;
+  }
 }
 
 /* Media query for android */

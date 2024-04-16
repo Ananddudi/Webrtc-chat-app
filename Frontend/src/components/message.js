@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./message.css";
 import { time_formate } from "../services/dateFormate";
 import { socket } from "../services/socket";
