@@ -7,7 +7,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MyProfile from "./pages/profile";
 import Errors from "./pages/error";
 import "./App.css";
-import "./devices style/app.css";
+import "./devices style/style.css";
 import Loader from "./components/loader";
 import Feedback from "./pages/feedback";
 import { useContenctHook } from "./context/contextapi";
