@@ -1,7 +1,7 @@
 {
   "name": "chat",
   "version": "1.0.0",
-  "description": "A node chat backend",
+  "description": "chat backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
