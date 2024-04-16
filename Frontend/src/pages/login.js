@@ -5,8 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import { wait } from "../services/utils";
 
-const Login = ({ setLogin }) => {
-  const [closeAnim, setCloseAnim] = useState(false);
+const Login = ({ login, setLogin }) => {
   const { formValidation } = useContenctHook();
 
   const [searchParams, setSearchParams] = useSearchParams({
@@ -26,10 +25,7 @@ const Login = ({ setLogin }) => {
   };
 
   const close = () => {
-    setCloseAnim(true);
-    setTimeout(() => {
-      setLogin(false);
-    }, 400);
+    setLogin("hide");
   };
 
   const queryClient = useQueryClient();
@@ -100,13 +96,13 @@ const Login = ({ setLogin }) => {
   }, [searchParams]);
 
   return (
-    <div className={closeAnim ? "popupBackground close" : "popupBackground"}>
-      <div className={closeAnim ? "popupMain close" : "popupMain"}>
+    <div className={`popupBackground ${login}`}>
+      <div className={`popupMain ${login}`}>
         <form
           className={`
           sign-up-form 
-          ${error.email || "loginEmail"} 
-          ${error.password || "loginPassword"}
+          ${error.email ? "" : "loginEmail"} 
+          ${error.password ? "" : "loginPassword"}
           `}
           onSubmit={onSubmit}
         >

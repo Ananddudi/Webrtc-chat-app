@@ -12,6 +12,7 @@ const connect = async (io, socket, onlineUsers) => {
     onlineUsers.addUser(socket.id, rg_user.email);
     const list = await updateAndGetList(rg_user.email, "y");
     io.emit("onlineUsers", list);
+    socket.broadcast.emit("online-status", rg_user.email);
   } catch (error) {
     console.log("error in connect", error);
     formatter.ErrorHandling(socket, error);
@@ -25,6 +26,7 @@ const disconnect = (io, socket, onlineUsers) => {
       const user = onlineUsers.removeUser(socket.id);
       const list = await updateAndGetList(user.username, "n");
       io.emit("onlineUsers", list);
+      socket.broadcast.emit("offline-status", user.username);
     } catch (error) {
       console.log("error in disconnect", error);
       formatter.ErrorHandling(socket, error);

@@ -14,10 +14,11 @@ const Content = ({ showcontent }) => {
         <div>
           <span className="frontandback">Project-Details:</span>
           <span className="myname desc">
-            Used <font color="lightcoral">REACT</font> as Frontend and python's
-            framework <font color="lightcoral">DJANGO</font> as backend.Building
-            UI and animation was kind of tricky because i wanted to give look of
-            3D rendering
+            Thanks for visiting the site.Here you can chat with anyone who
+            registered with site and have decent conversation with them.You can
+            also do live video chat if you want to. <br />
+            There is no upper data limit of sending videos,images,mp3 songs.Hope
+            you will like it.THanks again :)
           </span>
         </div>
       </article>

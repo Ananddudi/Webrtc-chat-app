@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./chatlist.css";
-import AddingUser from "./addingUser";
 import { useContenctHook } from "../context/contextapi";
 import { socket } from "../services/socket";
 import { d_formate } from "../services/dateFormate";
@@ -64,6 +63,11 @@ const Chatlist = ({ handleListData }) => {
 
   return (
     <div className="chat-list-container">
+      {filteredList.length == 0 && (
+        <div className="user-not-found">
+          <span>No User Found</span>
+        </div>
+      )}
       {filteredList.map((item) => (
         <article
           key={item._id}
@@ -73,7 +77,6 @@ const Chatlist = ({ handleListData }) => {
           <ListItem item={item} />
         </article>
       ))}
-      <AddingUser />
     </div>
   );
 };
