@@ -379,9 +379,29 @@ body {
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+}
+
+.popupBackground.show {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.popupBackground.hide {
+  display: block;
+  animation: hidepopupBackground 500ms ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes hidepopupBackground {
+  90% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(0);
+    display: none;
+  }
 }
 
 .popupBackground .main-loader {

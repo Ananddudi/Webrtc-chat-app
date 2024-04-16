@@ -112,7 +112,7 @@ const Signup = ({ loginform, setLoginform }) => {
   }, [getParams]);
 
   return (
-    <div className={`${loginform == "show" ? "popupBackground" : ""}`}>
+    <div className={`popupBackground ${loginform}`}>
       <div className={`popupMain ${loginform}`}>
         <form
           className={`

@@ -96,7 +96,7 @@ const Login = ({ login, setLogin }) => {
   }, [searchParams]);
 
   return (
-    <div className={`${login == "show" ? "popupBackground" : ""}`}>
+    <div className={`popupBackground ${login}`}>
       <div className={`popupMain ${login}`}>
         <form
           className={`

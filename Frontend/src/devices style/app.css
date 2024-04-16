@@ -123,8 +123,26 @@
     width: 72%;
   }
   .popupBackground {
+    display: none;
+  }
+
+  .popupBackground.show {
     display: block;
   }
+
+  .popupBackground.hide {
+    display: block;
+    animation: hidepopupBackground 1s ease-out;
+    animation-fill-mode: forwards;
+    animation-delay: 50ms;
+  }
+
+  @keyframes hidepopupBackground {
+    100% {
+      display: none;
+    }
+  }
+
   .search {
     display: none;
   }
