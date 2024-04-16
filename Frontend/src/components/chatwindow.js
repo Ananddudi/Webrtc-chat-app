@@ -4,7 +4,6 @@ import Message from "./message";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import { useContenctHook } from "../context/contextapi";
-import { socket } from "../services/socket";
 
 const ChatWindow = ({ data, setSwitched }) => {
   const { setLoading, auth } = useContenctHook();

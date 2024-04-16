@@ -1,13 +1,13 @@
 import ChatHeader from "./components/chatheaders";
 import Header from "./components/header";
 import ChatContainer from "./pages/chatContainer";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { ReactComponent as Svgfile } from "./statics/loading.svg";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MyProfile from "./pages/profile";
 import Errors from "./pages/error";
 import "./App.css";
-import "./devices style/app.css";
+import "./devices style/style.css";
 import Loader from "./components/loader";
 import Feedback from "./pages/feedback";
 import { useContenctHook } from "./context/contextapi";
@@ -23,7 +23,9 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  const [showMail, setShowMail] = useState(false);
   const { load } = useScreenSize();
+
   const mainpage = () => {
     if (load) {
       return (
@@ -42,8 +44,8 @@ function App() {
         <div className="Mainclass">
           <main className="containerForChat">
             <ChatHeader />
-            <ChatContainer />
-            <AddingUser />
+            <ChatContainer setShowMail={setShowMail} />
+            {showMail && <AddingUser />}
           </main>
         </div>
       </div>

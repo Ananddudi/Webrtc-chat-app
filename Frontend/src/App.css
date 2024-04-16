@@ -361,7 +361,7 @@ body {
   cursor: pointer;
   font-size: 35px;
   transform: translateY(200%);
-  animation: addIcon 2s ease-out;
+  animation: addIcon 500ms ease-out;
   animation-fill-mode: forwards;
 }
 

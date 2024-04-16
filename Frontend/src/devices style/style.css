@@ -171,20 +171,20 @@
   }
 
   .navbar .links.show {
-    animation: openMenu 500ms ease-out;
+    animation: openMenu 300ms ease-out;
     animation-fill-mode: forwards;
   }
 
   .navbar .links.showWithAuth {
-    animation: openMenuWithAuth 500ms ease-out;
+    animation: openMenuWithAuth 300ms ease-out;
     animation-fill-mode: forwards;
   }
 
   .navbar .links.hide {
-    animation: hideMenu 500ms ease-out;
+    animation: hideMenu 300ms ease-out;
   }
   .navbar .links.hideWithAuth {
-    animation: hideAuth 500ms ease-out;
+    animation: hideAuth 300ms ease-out;
   }
 
   @keyframes hideAuth {

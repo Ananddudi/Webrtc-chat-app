@@ -1,6 +1,7 @@
 //express with socket.io
 const express = require("express");
-const { createServer } = require("node:https");
+// const { createServer } = require("node:https");
+const http = require("http");
 const { Server } = require("socket.io");
 const userRouter = require("./routes/user.js");
 const cookieParser = require("cookie-parser");
@@ -18,10 +19,11 @@ const PORT = process.env.PORT || 3005;
 
 const app = express();
 
-const key = fs.readFileSync("cert.key");
-const cert = fs.readFileSync("cert.crt");
+// const key = fs.readFileSync("cert.key");
+// const cert = fs.readFileSync("cert.crt");
 
-const httpServer = createServer({ key, cert }, app);
+// const httpServer = createServer({ key, cert }, app);
+const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
   maxHttpBufferSize: 1e8, // 100 MB
@@ -30,7 +32,7 @@ const io = new Server(httpServer, {
     origin: [
       "http://localhost:3000",
       process.env.APP_URL,
-      "https://192.168.42.23:3000",
+      "http://192.168.42.160:3000",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],

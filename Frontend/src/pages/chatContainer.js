@@ -4,7 +4,7 @@ import ChatWindow from "../components/chatwindow";
 import { useContenctHook } from "../context/contextapi";
 import WebRTC from "../components/rtc";
 
-const ChatContainer = () => {
+const ChatContainer = ({ setShowMail }) => {
   const { auth } = useContenctHook();
   const [switched, setSwitched] = useState(true);
   const [data, setData] = useState({});
@@ -17,6 +17,11 @@ const ChatContainer = () => {
   useEffect(() => {
     setSwitched(true);
   }, [auth]);
+
+  //This effect is for closing mail box on window opening
+  useEffect(() => {
+    setShowMail(switched);
+  }, [switched]);
 
   return (
     <>
