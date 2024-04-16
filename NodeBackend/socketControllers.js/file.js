@@ -91,7 +91,7 @@ const handleFile = (socket, onlineUsers) => {
         //     };
         //   }, []);
       } catch (error) {
-        console.log("error in comple", error.message);
+        console.log("error in File upload", error.message);
         formatter.ErrorHandling(socket, error);
       }
     }
