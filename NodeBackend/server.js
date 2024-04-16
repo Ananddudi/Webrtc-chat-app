@@ -1,16 +1,15 @@
 //express with socket.io
 const express = require("express");
-const { createServer } = require("node:https");
+const http = require("http");
 const { Server } = require("socket.io");
 const userRouter = require("./routes/user.js");
+const messageRouter = require("./routes/message.js");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const connection = require("./socket.connect.js");
 const dotenv = require("dotenv");
-const fs = require("fs");
 const connnectDatabase = require("./db.js");
 const path = require("path");
-const messageRouter = require("./routes/message.js");
 const cors = require("cors");
 dotenv.config();
 
@@ -18,10 +17,7 @@ const PORT = process.env.PORT || 3005;
 
 const app = express();
 
-const key = fs.readFileSync("cert.key");
-const cert = fs.readFileSync("cert.crt");
-
-const httpServer = createServer({ key, cert }, app);
+const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
   maxHttpBufferSize: 1e8, // 100 MB
