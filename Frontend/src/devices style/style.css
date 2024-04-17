@@ -125,15 +125,15 @@
   }
 
   .popupBackground {
-    display: none;
+    visibility: hidden;
   }
 
   .popupBackground.show {
-    display: block;
+    visibility: visible;
   }
 
   .popupBackground.hide {
-    display: block;
+    visibility: visible;
     animation: hidepopupBackground 1s ease-out;
     animation-fill-mode: forwards;
     animation-delay: 50ms;
@@ -141,7 +141,7 @@
 
   @keyframes hidepopupBackground {
     100% {
-      display: none;
+      visibility: hidden;
     }
   }
 

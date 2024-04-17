@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./message.css";
 import { time_formate } from "../services/dateFormate";
 import { socket } from "../services/socket";
 import Media from "./media";
+import LoadingBar from "react-top-loading-bar";
 
 const Message = ({ messages, convId, data, addMessage }) => {
+  const [progress, setProgress] = useState(0);
   const viewRef = useRef(null);
   const handleSubmit = (e) => {
     if (e.key === "Enter") {
@@ -67,6 +69,11 @@ const Message = ({ messages, convId, data, addMessage }) => {
 
   return (
     <section className="message-section">
+      <LoadingBar
+        color="#f11946"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <div className="messages" ref={viewRef}>
         {messages.map((msg, index) => {
           return (
@@ -95,7 +102,11 @@ const Message = ({ messages, convId, data, addMessage }) => {
           id="msg-box"
           className="messageInboxes"
         />
-        <Media recieverMail={data.email} convId={convId} />
+        <Media
+          recieverMail={data.email}
+          convId={convId}
+          setProgress={setProgress}
+        />
       </div>
     </section>
   );
