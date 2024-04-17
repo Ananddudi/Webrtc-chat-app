@@ -52,7 +52,6 @@ const Media = ({ recieverMail, convId, setProgress }) => {
               convId,
               recieverMail
             );
-            e.target.value = null;
             setDisable(false);
             setShow(!show);
           }
@@ -63,6 +62,7 @@ const Media = ({ recieverMail, convId, setProgress }) => {
     };
 
     reader.readAsDataURL(file);
+    e.target.value = null;
   };
 
   return (

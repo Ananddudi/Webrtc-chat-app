@@ -45,7 +45,7 @@ const Signup = ({ loginform, setLoginform }) => {
     },
     onError: (mutationError) => {
       if (mutationError.response.status == 409) {
-        axiosapi.error("Already registered! Try different one", 5);
+        axiosapi.error("This email is not available!", 5);
       } else {
         axiosapi.error(mutationError.response.data.message);
       }
