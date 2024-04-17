@@ -33,6 +33,7 @@ const handleFile = (socket, onlineUsers) => {
     "stream-completion",
     async (filename, filetype, convId, reciever) => {
       try {
+        console.log("Got a file");
         const token = parseCookie(socket.request);
         const sender = parsetoken(token);
         const [filepath, storedPath] = newpath(filename);
