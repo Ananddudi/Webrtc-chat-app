@@ -12,6 +12,19 @@ const ListItem = ({ item }) => {
     ? item.profilepic
     : require("../statics/profileImage.jpg");
 
+  const showMessage = (msg) => {
+    if (msg.includes("sharedFiles")) {
+      msg = "*File Recieved*";
+    } else {
+      if (window.innerWidth < 768 && msg.length > 20) {
+        msg = msg.substring(0, 20);
+      } else if (msg.length > 50) {
+        msg = msg.substring(0, 50);
+      }
+    }
+    return msg;
+  };
+
   useEffect(() => {
     const handleConv = (conversation) => {
       if (conversation && conversation.LastMessage) {
@@ -49,7 +62,9 @@ const ListItem = ({ item }) => {
         </div>
         <div className="name-message">
           <div>{item.fullname}</div>
-          <div className={invoked ? "highlight" : ""}>{lstMessage}</div>
+          <div className={invoked ? "highlight" : ""}>
+            {showMessage(lstMessage)}
+          </div>
         </div>
       </section>
       <div>{d_formate(item.createdAt)}</div>

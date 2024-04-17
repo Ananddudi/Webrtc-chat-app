@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import "./feedback.css";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 
@@ -40,7 +40,7 @@ const Feedback = () => {
         <textarea
           name="feedback"
           id="feedback"
-          cols="100"
+          cols={window.innerWidth < 768 ? "30" : "100"}
           rows="10"
           ref={textarearef}
         ></textarea>

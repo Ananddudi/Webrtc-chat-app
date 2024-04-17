@@ -24,7 +24,7 @@ const handleFile = (socket, onlineUsers) => {
       imageBuffer = Buffer.concat([imageBuffer, fileBuffer]);
       cb();
     } catch (error) {
-      console.log("error", error.message);
+      console.log("error in recieving streams", error.message);
       formatter.ErrorHandling(socket, error);
     }
   });
@@ -54,6 +54,7 @@ const handleFile = (socket, onlineUsers) => {
           socket.to(user.id).emit("recieve-message", newmessage);
         }
         socket.emit("recieve-message", { ...newmessage, position: "R" });
+        imageBuffer = Buffer.alloc(0);
         // IMPORTANT: here i am directly giving url in message to client can show using media tags but below i have
         // implemented code for streaming data from node to client which will give same functionality but more efficient.
         // If i use below method to show media on frontend then i will have to also write same code when first time user get-all-messages using
@@ -91,7 +92,7 @@ const handleFile = (socket, onlineUsers) => {
         //     };
         //   }, []);
       } catch (error) {
-        console.log("error in File upload", error.message);
+        console.log("error in file completion", error.message);
         formatter.ErrorHandling(socket, error);
       }
     }
