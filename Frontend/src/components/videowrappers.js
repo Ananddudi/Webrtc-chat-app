@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { FcEndCall } from "react-icons/fc";
-import { MdFlipCameraIos } from "react-icons/md";
+// import { MdFlipCameraIos } from "react-icons/md";
 import { BsBack } from "react-icons/bs";
 
 const VideoWrappers = React.forwardRef(
-  ({ localVidRef, remoteVidRef, endCall, setCamera }, ref) => {
+  (
+    {
+      localVidRef,
+      remoteVidRef,
+      endCall,
+      // setCamera
+    },
+    ref
+  ) => {
     const [changeDisplay, setChangeDisplay] = useState(false);
-    const [currentFacingMode, setCurrentFacingMode] = useState("environment");
+    // const [currentFacingMode, setCurrentFacingMode] = useState("environment");
     return (
       <>
         <div className="videoWrappers">
@@ -30,7 +38,7 @@ const VideoWrappers = React.forwardRef(
             <button className="end-call" onClick={() => endCall()}>
               <FcEndCall className="end-icon" />
             </button>
-            <button
+            {/* <button
               className="camera-mode"
               onClick={() => {
                 if (currentFacingMode == "environment") {
@@ -43,7 +51,7 @@ const VideoWrappers = React.forwardRef(
               }}
             >
               <MdFlipCameraIos className="camera-mode-icon" />
-            </button>
+            </button> */}
             <button
               className="camera-mode"
               onClick={() => setChangeDisplay(!changeDisplay)}

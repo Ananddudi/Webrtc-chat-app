@@ -10,8 +10,6 @@ const AuthMenu = () => {
   const { auth } = useContenctHook();
   const navigate = useNavigate();
 
-  console.log("prints");
-
   const handleFeedback = (e) => {
     if (auth) {
       navigate("/feedback");

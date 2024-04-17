@@ -14,29 +14,29 @@ const WebRTC = () => {
   const localVidRef = useRef();
   const peerConnection = useRef();
 
-  async function setCamera(selectedCameras) {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: selectedCameras,
-        },
-      });
-      const [videoTrack] = stream.getVideoTracks();
-      localVidRef.current.srcObject = stream;
-      const sender = peerConnection.current
-        .getSenders()
-        .find((s) => s.track.kind === videoTrack.kind);
-      sender.replaceTrack(videoTrack);
-    } catch (error) {
-      console.log("Error occured while changing camera", error.message);
-    }
-  }
+  // async function setCamera(selectedCameras) {
+  //   try {
+  //     const stream = await navigator.mediaDevices.getUserMedia({
+  //       video: {
+  //         facingMode: selectedCameras,
+  //       },
+  //     });
+  //     const [videoTrack] = stream.getVideoTracks();
+  //     localVidRef.current.srcObject = stream;
+  //     const sender = peerConnection.current
+  //       .getSenders()
+  //       .find((s) => s.track.kind === videoTrack.kind);
+  //     sender.replaceTrack(videoTrack);
+  //   } catch (error) {
+  //     console.log("Error occured while changing camera", error.message);
+  //   }
+  // }
 
   const getMediaAndPeers = async () => {
     try {
       let localStreams = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: "environment",
+          facingMode: "user",
         },
       });
       localVidRef.current.srcObject = localStreams;
@@ -150,7 +150,7 @@ const WebRTC = () => {
       };
 
       if (callMode.mode !== "" && callMode.mode !== "hold") {
-        axiosapi.success("We are connecting", "", 5);
+        axiosapi.success("We are connecting please wait", "", 2);
         if (callMode.mode == "call") {
           socket.on("connection-status", handleConnection);
         }
@@ -221,7 +221,7 @@ const WebRTC = () => {
           localVidRef={localVidRef}
           remoteVidRef={remoteVidRef}
           endCall={endCall}
-          setCamera={setCamera}
+          // setCamera={setCamera}
         />
       )}
     </div>

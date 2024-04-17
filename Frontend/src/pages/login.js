@@ -40,14 +40,10 @@ const Login = ({ login, setLogin }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth"] });
-      axiosapi.success("Successfully logged in");
       close();
     },
     onError: (mutationError) => {
-      if (mutationError.response.status == 500) {
-        wait(() => axiosapi.error(mutationError.response.data.message), 3);
-        axiosapi.success("Please sign up first!");
-      }
+      axiosapi.error(mutationError.response.data.message);
     },
   });
 

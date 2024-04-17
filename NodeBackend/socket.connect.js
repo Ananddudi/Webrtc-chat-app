@@ -11,11 +11,23 @@ class OnlineUsers {
   constructor() {
     this.list = [];
   }
+  isExist({ username, id }) {
+    if (id) {
+      return this.list.some((val) => val.id == id);
+    }
+    return this.list.some((val) => val.username == username);
+  }
   addUser(id, username) {
-    this.list = this.list.filter((val) => val.id !== id);
-    this.list.push({ id, username });
+    if (this.isExist({ username })) {
+      return "exist";
+    } else {
+      this.list.push({ id, username });
+    }
   }
   removeUser(id) {
+    if (!this.isExist({ id })) {
+      return null;
+    }
     let index = this.list.findIndex((val) => val.id == id);
     return this.list.splice(index, 1)[0];
   }

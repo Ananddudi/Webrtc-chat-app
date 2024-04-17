@@ -9,7 +9,14 @@ const connect = async (io, socket, onlineUsers) => {
   try {
     const token = parseCookie(socket.request);
     const rg_user = parsetoken(token);
-    onlineUsers.addUser(socket.id, rg_user.email);
+    const exist = onlineUsers.addUser(socket.id, rg_user.email);
+
+    if (exist == "exist") {
+      socket.emit("exist", true);
+      return;
+    }
+
+    socket.emit("exist", false); //checks for same user connection more than one time
     const list = await updateAndGetList(rg_user.email, "y");
     io.emit("onlineUsers", list);
     socket.broadcast.emit("online-status", rg_user.email);
@@ -24,6 +31,9 @@ const disconnect = (io, socket, onlineUsers) => {
     try {
       console.log("socket is disconnected", socket.id);
       const user = onlineUsers.removeUser(socket.id);
+      if (user == null) {
+        return;
+      }
       const list = await updateAndGetList(user.username, "n");
       io.emit("onlineUsers", list);
       socket.broadcast.emit("offline-status", user.username);
