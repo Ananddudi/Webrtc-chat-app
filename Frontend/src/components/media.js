@@ -3,13 +3,31 @@ import { ReactComponent as Video } from "../statics/videIcon.svg";
 import { ReactComponent as Mp3 } from "../statics/mp3file.svg";
 import { ReactComponent as ImageIcon } from "../statics/imageIcon.svg";
 import { socket } from "../services/socket";
+import axiosapi from "../services/api";
 
-const Media = ({ recieverMail, convId }) => {
+const Media = ({ recieverMail, convId, setProgress }) => {
   const [show, setShow] = useState(false);
+  const [disable, setDisable] = useState(false);
+
+  const calculatePercentage = (updateVal, totalVal) => {
+    return (updateVal / totalVal) * 100;
+  };
 
   const handleChange = (e) => {
     e.preventDefault();
+    if (disable) {
+      e.target.value = "";
+      axiosapi.error("Please wait while file being sent!", "", 4);
+      return;
+    }
+    setDisable(true);
     const file = e.target.files[0];
+    if (!file) {
+      e.target.value = "";
+      axiosapi.success("No file selected!", "", 4);
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -21,9 +39,9 @@ const Media = ({ recieverMail, convId }) => {
       const sendChunk = () => {
         const start = i * chunkSize;
         const end = Math.min((i + 1) * chunkSize, base64Data.length);
-
         socket.emit("read-stream", base64Data.slice(start, end), () => {
           i++;
+          setProgress(calculatePercentage(i, totalChunks));
           if (i < totalChunks) {
             sendChunk();
           } else {
@@ -34,6 +52,9 @@ const Media = ({ recieverMail, convId }) => {
               convId,
               recieverMail
             );
+            e.target.value = null;
+            setDisable(false);
+            setShow(!show);
           }
         });
       };

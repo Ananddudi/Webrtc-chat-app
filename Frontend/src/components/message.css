@@ -117,17 +117,32 @@
 }
 
 .message-section .messages .left .videoMessage {
-  width: 100%;
+  max-width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .message-section .messages .left .audioMessage {
   object-fit: cover;
-  width: 100%;
+  max-width: 100%;
 }
 .message-section .messages .left .imageMessage {
-  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.message-section .messages .right .audioMessage {
+  object-fit: cover;
+  max-width: 100%;
+}
+.message-section .messages .right .videoMessage {
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.message-section .messages .right .imageMessage {
+  max-width: 100%;
   object-fit: cover;
 }
 
@@ -143,12 +158,13 @@
 
 .message-section .messages .left {
   border-radius: 10px;
+  max-width: 300px;
 }
 
 .message-section .messages .left > article {
   position: relative;
   background-color: var(--left-ground);
-  max-width: 50%;
+  max-width: 300px;
   border: 1px solid darksalmon;
   border-radius: 10px;
   z-index: -2;
@@ -182,6 +198,7 @@
 
 .message-section .messages .right > article {
   position: relative;
+  max-width: 300px;
   background-color: var(--right-ground);
   border: 1px solid darksalmon;
   border-radius: 10px;

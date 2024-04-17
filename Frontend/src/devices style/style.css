@@ -114,24 +114,26 @@
     display: block;
   }
   .containerForChat {
-    width: 98%;
+    width: 95%;
     margin: 0 5px;
     height: 550px;
     margin-top: 2%;
   }
-  .headerBarText {
-    width: 72%;
+
+  .headerSection .header .headerBarText span {
+    padding-right: 20px;
   }
+
   .popupBackground {
-    display: none;
+    visibility: hidden;
   }
 
   .popupBackground.show {
-    display: block;
+    visibility: visible;
   }
 
   .popupBackground.hide {
-    display: block;
+    visibility: visible;
     animation: hidepopupBackground 1s ease-out;
     animation-fill-mode: forwards;
     animation-delay: 50ms;
@@ -139,7 +141,7 @@
 
   @keyframes hidepopupBackground {
     100% {
-      display: none;
+      visibility: hidden;
     }
   }
 
@@ -171,20 +173,20 @@
   }
 
   .navbar .links.show {
-    animation: openMenu 500ms ease-out;
+    animation: openMenu 300ms ease-out;
     animation-fill-mode: forwards;
   }
 
   .navbar .links.showWithAuth {
-    animation: openMenuWithAuth 500ms ease-out;
+    animation: openMenuWithAuth 300ms ease-out;
     animation-fill-mode: forwards;
   }
 
   .navbar .links.hide {
-    animation: hideMenu 500ms ease-out;
+    animation: hideMenu 300ms ease-out;
   }
   .navbar .links.hideWithAuth {
-    animation: hideAuth 500ms ease-out;
+    animation: hideAuth 300ms ease-out;
   }
 
   @keyframes hideAuth {
@@ -257,7 +259,7 @@
   .side-menu .menu-icon {
     color: white;
     font-size: 26px;
-    margin-right: 20px;
+    margin-right: 10px;
     margin-top: 5px;
     cursor: pointer;
   }
@@ -315,6 +317,39 @@
   }
   .popupMain .profileBtnpos {
     padding: 5px;
+  }
+
+  .textProfile div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .textProfile .myname.name,
+  .textProfile .myname.desc {
+    text-align: center;
+  }
+
+  .frontandback {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .chat-window-main {
+    height: 100%;
+  }
+  .message-section {
+    height: 72%;
+  }
+  .message-section .messages .left > article,
+  .message-section .messages .right > article {
+    max-width: 250px;
+  }
+
+  .chat-list-container .chat-item .chat-info {
+    width: 90%;
   }
 }
 

@@ -3,11 +3,13 @@ import "./message.css";
 import { time_formate } from "../services/dateFormate";
 import { socket } from "../services/socket";
 import Media from "./media";
+import LoadingBar from "react-top-loading-bar";
 
 const Message = ({ messages, convId, data, addMessage }) => {
+  const [progress, setProgress] = useState(0);
   const viewRef = useRef(null);
   const handleSubmit = (e) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       e.preventDefault();
       socket.emit("send-message", convId, data.email, e.target.value);
       e.target.value = "";
@@ -56,18 +58,28 @@ const Message = ({ messages, convId, data, addMessage }) => {
   }, []);
 
   useEffect(() => {
-    viewRef?.current?.scrollIntoView({ behavior: "smooth" });
+    if (viewRef?.current) {
+      viewRef.current.scrollTop = viewRef.current.scrollHeight;
+    }
+    // viewRef?.current?.scrollIntoView({
+    //   behavior: "smooth",
+    //   block: "end",
+    // });
   }, [messages]);
 
   return (
     <section className="message-section">
-      <div className="messages">
+      <LoadingBar
+        color="#f11946"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
+      <div className="messages" ref={viewRef}>
         {messages.map((msg, index) => {
           return (
             <div
               key={index}
-              ref={viewRef}
-              className={`${msg.position == "L" ? "left" : "right"}`}
+              className={`${msg.position === "L" ? "left" : "right"}`}
             >
               <article>
                 <div>
@@ -90,7 +102,11 @@ const Message = ({ messages, convId, data, addMessage }) => {
           id="msg-box"
           className="messageInboxes"
         />
-        <Media recieverMail={data.email} convId={convId} />
+        <Media
+          recieverMail={data.email}
+          convId={convId}
+          setProgress={setProgress}
+        />
       </div>
     </section>
   );
