@@ -10,9 +10,10 @@ import axiosapi from "../services/api";
 import Search from "./search";
 import { RiMenu3Fill } from "react-icons/ri";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
+import { socket } from "../services/socket";
 
 const Header = () => {
-  const { auth } = useContenctHook();
+  const { auth, warning, setWarning } = useContenctHook();
   const [showpopup, setShowpopup] = useState("");
   const [loginform, setLoginform] = useState("");
   const [login, setLogin] = useState("");
@@ -68,7 +69,7 @@ const Header = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth"] });
-      axiosapi.success("Successfully logout");
+      warning.logout && axiosapi.success("Successfully logout");
     },
     onError: (mutationError) => {
       if (mutationError && mutationError.response.status == 500) {
@@ -83,10 +84,33 @@ const Header = () => {
     }
   }, [showpopup, login, loginform, auth]);
 
+  useEffect(() => {
+    const handleExistUser = (value) => {
+      if (value) {
+        setWarning({ login: false, logout: false }); //hiding both login and logout warnings
+        mutate();
+        axiosapi.error("User is Already Online!", "toastError", 6);
+      } else {
+        axiosapi.success("Successfully logged in");
+      }
+    };
+    socket.on("exist", handleExistUser);
+    return () => {
+      socket.on("exist", handleExistUser);
+    };
+  }, []);
+
   const Links = memo(() => {
     if (auth) {
       return (
-        <button title="Logout" className="profile" onClick={() => mutate()}>
+        <button
+          title="Logout"
+          className="profile"
+          onClick={() => {
+            setWarning({ login: false, logout: true });
+            mutate();
+          }}
+        >
           Sign Out
         </button>
       );

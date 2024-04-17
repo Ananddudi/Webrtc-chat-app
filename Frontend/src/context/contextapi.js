@@ -15,6 +15,10 @@ let ContextApiProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState(mockdata);
   const [search, setSearch] = useState("");
+  const [warning, setWarning] = useState({
+    login: true,
+    logout: true,
+  });
 
   const [callMode, setCallMode] = useState({
     mode: "",
@@ -66,7 +70,7 @@ let ContextApiProvider = ({ children }) => {
       setAuth(null);
       setUsers(mockdata);
       setLoading(false);
-      axiosapi.error("Please login!", "toastError", 2);
+      warning.login && axiosapi.error("Please login!", "toastError", 2);
     } else if (data) {
       socket.connect();
       setAuth(data);
@@ -124,6 +128,8 @@ let ContextApiProvider = ({ children }) => {
     setSearch,
     callMode,
     setCallMode,
+    warning,
+    setWarning,
   };
 
   return (
