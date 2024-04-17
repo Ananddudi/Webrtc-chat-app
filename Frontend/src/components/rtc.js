@@ -14,6 +14,7 @@ const WebRTC = () => {
   const localVidRef = useRef();
   const peerConnection = useRef();
 
+  /// IT ONLY WORKS AT FIRST TIME SO COMMMENTED OUT FOR NOW
   // async function setCamera(selectedCameras) {
   //   try {
   //     const stream = await navigator.mediaDevices.getUserMedia({
@@ -38,6 +39,7 @@ const WebRTC = () => {
         video: {
           facingMode: "user",
         },
+        audio: true,
       });
       localVidRef.current.srcObject = localStreams;
 
