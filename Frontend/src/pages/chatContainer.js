@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Chatlist from "../components/chatlist";
 import ChatWindow from "../components/chatwindow";
 import { useContenctHook } from "../context/contextapi";
-import WebRTC from "../components/rtc";
+import WebRtcHandshake from "../components/rtcHandshake";
 
 const ChatContainer = ({ setShowMail }) => {
   const { auth } = useContenctHook();
@@ -25,7 +25,7 @@ const ChatContainer = ({ setShowMail }) => {
 
   return (
     <>
-      <WebRTC data={data} />
+      <WebRtcHandshake />
       {switched ? (
         <Chatlist setSwitched={setSwitched} handleListData={handleListData} />
       ) : (

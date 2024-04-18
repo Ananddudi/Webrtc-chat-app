@@ -20,10 +20,7 @@ let ContextApiProvider = ({ children }) => {
     logout: true,
   });
 
-  const [callMode, setCallMode] = useState({
-    mode: "",
-    data: {},
-  });
+  const [rtcAnswereData, setRtcAnswereData] = useState(null);
 
   const formValidation = (key, value) => {
     let result = false;
@@ -95,18 +92,10 @@ let ContextApiProvider = ({ children }) => {
     function errorMessage(message) {
       axiosapi.error(message);
     }
-    const handleConnect = ({ reciever }) => {
-      setCallMode({
-        mode: "hold",
-        data: reciever,
-      });
-    };
 
     socket.on("onlineUsers", updateList);
     socket.on("error", errorMessage);
-    socket.on("connection-request", handleConnect);
     return () => {
-      socket.off("connection-request", handleConnect);
       socket.off("onlineUsers", updateList);
       socket.off("error", errorMessage);
     };
@@ -126,8 +115,8 @@ let ContextApiProvider = ({ children }) => {
     users,
     filteredList,
     setSearch,
-    callMode,
-    setCallMode,
+    rtcAnswereData,
+    setRtcAnswereData,
     warning,
     setWarning,
   };
