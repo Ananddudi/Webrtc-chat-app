@@ -52,6 +52,7 @@ const VideoWrappers = React.forwardRef(
             >
               <MdFlipCameraIos className="camera-mode-icon" />
             </button> */}
+
             <button
               className="camera-mode"
               onClick={() => setChangeDisplay(!changeDisplay)}

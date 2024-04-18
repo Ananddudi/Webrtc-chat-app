@@ -2,7 +2,6 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FcInvite } from "react-icons/fc";
 import axiosapi from "../services/api";
-import { wait } from "../services/utils";
 import { useContenctHook } from "../context/contextapi";
 
 const AddingUser = () => {
@@ -33,11 +32,7 @@ const AddingUser = () => {
       setDisable(false);
     },
     onError: (error) => {
-      axiosapi.error("Some error occured!", "toastSuccess", 4);
-      wait(
-        () => axiosapi.error(error.response.data.message, "toastSuccess", 4),
-        4
-      );
+      axiosapi.error(error.response.data.message, "toastSuccess", 4);
       setDisable(false);
     },
   });

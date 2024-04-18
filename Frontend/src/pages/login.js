@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
-import { wait } from "../services/utils";
 
 const Login = ({ login, setLogin }) => {
   const { formValidation } = useContenctHook();
