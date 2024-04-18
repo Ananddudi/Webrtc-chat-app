@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./chatwindow.css";
 import { IoArrowBack } from "react-icons/io5";
-import { socket } from "../services/socket";
+import { rtchandshake, socket } from "../services/socket";
 import Golive from "../statics/goLive.svg";
 import { useContenctHook } from "../context/contextapi";
 
 const ChatWindowHeader = ({ item, setSwitched }) => {
-  const { setCallMode, auth } = useContenctHook();
+  const { setRtcAnswereData, auth } = useContenctHook();
   const [online, setOnline] = useState(item.available);
   const imageurl = item.profilepic
     ? item.profilepic
     : require("../statics/profileImage.jpg");
 
   const initiateVideCall = () => {
-    socket.emit("initiate-connection", { reciever: auth, sendTo: item.email });
-    setCallMode({
-      mode: "call",
-      data: item,
-    });
+    rtchandshake("init", item.email, auth); //initial rtc handshake
+    setRtcAnswereData(item);
   };
 
   useEffect(() => {
