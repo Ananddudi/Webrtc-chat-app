@@ -10,23 +10,28 @@ export const socket = io(URL, {
 
 export function rtchandshake(type, reciever, data = null) {
   try {
+    let event = "";
     switch (type) {
       case "init":
-        socket.emit("initiate-handshake", { data, reciever });
+        event = "initiate-handshake";
         break;
       case "accepted":
-        socket.emit("handshake-accepted", { data, reciever });
+        event = "handshake-accepted";
         break;
       case "addIce":
-        socket.emit("add-ice-candidate", { data, reciever });
+        event = "add-ice-candidate";
         break;
       case "addOffer":
-        socket.emit("add-remote-offer", { data, reciever });
+        event = "add-remote-offer";
         break;
       case "closeRtc":
-        socket.emit("close-rtc", { data, reciever });
+        event = "close-rtc";
+        break;
+      case "rtcReject":
+        event = "handshake-reject";
         break;
     }
+    socket.emit(event, { data, reciever });
   } catch (error) {
     axiosapi.error(error.message);
   }

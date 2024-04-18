@@ -30,7 +30,7 @@ const CallerWebRTC = ({ reciever, closeRtc }) => {
   const peerConnection = useRef();
 
   const endCall = () => {
-    console.log("runnns", reciever);
+    peerConnection.current.close();
     closeRtc(reciever);
   };
 

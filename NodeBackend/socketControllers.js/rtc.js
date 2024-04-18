@@ -15,10 +15,20 @@ const handleConnection = (socket, onlineUsers) => {
     }
   });
 
+  socket.on("handshake-reject", async ({ reciever }) => {
+    try {
+      const user = onlineUsers.findByUsername(reciever);
+      socket.to(user.id).emit("handshake-response", "reject");
+    } catch (error) {
+      console.log("error in initiate-connection", error.message);
+      formatter.ErrorHandling(socket, error);
+    }
+  });
+
   socket.on("handshake-accepted", async ({ reciever }) => {
     try {
       const user = onlineUsers.findByUsername(reciever);
-      socket.to(user.id).emit("handshake-response");
+      socket.to(user.id).emit("handshake-response", "accept");
     } catch (error) {
       console.log("error in initiate-connection", error.message);
       formatter.ErrorHandling(socket, error);

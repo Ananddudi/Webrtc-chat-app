@@ -30,6 +30,7 @@ const AnswerWebRTC = ({ reciever, closeRtc }) => {
   const peerConnection = useRef();
 
   const endCall = () => {
+    peerConnection.current.close();
     closeRtc(reciever);
   };
 

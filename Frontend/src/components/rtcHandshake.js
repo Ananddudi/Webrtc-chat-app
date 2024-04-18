@@ -33,29 +33,18 @@ const WebRtcHandshake = () => {
     }
   };
 
-  //answere effect
   useEffect(() => {
-    const handshakeRequest = ({ data }) => {
-      setAnswererData(data);
-    };
-    socket.on("handshake-request", handshakeRequest);
-    return () => {
-      socket.off("handshake-request", handshakeRequest);
-    };
-  }, []);
-
-  //caller effect
-  useEffect(() => {
-    const handshakeResponse = () => {
-      setShowRtc("caller");
+    const handshakeResponse = (params) => {
+      if (params == "accept") {
+        setShowRtc("caller");
+      } else {
+        setRtcAnswereData(null);
+        setAnswererData(null);
+        setShowRtc("");
+        axiosapi.error("User is already on other call");
+      }
     };
     const handleClosingRtc = (email = null) => {
-      console.log(
-        "here what is happening",
-        email,
-        rtcAnswereData,
-        answererData
-      );
       if (email && (rtcAnswereData || answererData)) {
         axiosapi.success(`${email} has disconnected the call!`);
       } else {
@@ -80,8 +69,18 @@ const WebRtcHandshake = () => {
     socket.on("handshake-response", handshakeResponse);
     socket.on("close-rtc-request", handleClosingRtc);
     socket.on("offline-status", handleClosingRtc);
+    //answere
+    const handshakeRequest = ({ data }) => {
+      if (answererData || rtcAnswereData) {
+        rtchandshake("rtcReject", data.email);
+        return;
+      }
+      setAnswererData(data);
+    };
+    socket.on("handshake-request", handshakeRequest);
     return () => {
-      socket.off("offline-status", handleClosingRtc); //this will work for both clients
+      socket.off("handshake-request", handshakeRequest);
+      socket.off("offline-status", handleClosingRtc);
       socket.off("close-rtc-request", handleClosingRtc);
       socket.off("handshake-response", handshakeResponse);
     };
