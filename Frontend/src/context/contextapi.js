@@ -3,7 +3,7 @@ import { socket } from "../services/socket";
 import validator from "validator";
 import axiosapi from "../services/api";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "../components/loader";
+import { Hashloader } from "../components/loader";
 import mockdata from "../mockdata/data.json";
 import useScreenSize from "../hooks/useScreenSize";
 
@@ -71,7 +71,6 @@ let ContextApiProvider = ({ children }) => {
     } else if (data) {
       socket.connect();
       setAuth(data);
-      setLoading(false);
     }
   }, [error, isLoading, isFetching]);
 
@@ -124,7 +123,7 @@ let ContextApiProvider = ({ children }) => {
   return (
     <ContextApi.Provider value={globalObject}>
       {children}
-      <Loader loading={loading} />
+      <Hashloader loading={loading} />
     </ContextApi.Provider>
   );
 };

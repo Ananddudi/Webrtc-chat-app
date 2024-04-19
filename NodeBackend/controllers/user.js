@@ -78,16 +78,28 @@ const authentication = async (req, res) => {
   }
 };
 
-const updateAndGetList = async (username, val) => {
-  const user = await userModel.findOneAndUpdate(
-    { email: username },
-    { available: val },
-    { new: true }
-  );
-  if (!user) {
-    const error = new Error("User does not found");
-    error.statusCode = 403;
-    throw error;
+const updateAndGetList = async (
+  username = null,
+  val = null,
+  page = 1,
+  limit = 10
+) => {
+  let user,
+    skip = 0;
+  if (username !== null && val !== null) {
+    user = await userModel.findOneAndUpdate(
+      { email: username },
+      { available: val },
+      { new: true }
+    );
+    if (!user) {
+      const error = new Error("User does not found");
+      error.statusCode = 403;
+      throw error;
+    }
+  } else {
+    page = page == 0 ? 1 : page;
+    skip = (page - 1) * limit;
   }
 
   let allusers = await userModel.aggregate([
@@ -95,6 +107,12 @@ const updateAndGetList = async (username, val) => {
       $sort: {
         available: -1,
       },
+    },
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
     },
     {
       $project: {
