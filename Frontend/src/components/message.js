@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./message.css";
-import { time_formate } from "../services/dateFormate";
+import { time_formate } from "../utils/dateFormate";
 import { socket } from "../services/socket";
 import Media from "./media";
 import LoadingBar from "react-top-loading-bar";

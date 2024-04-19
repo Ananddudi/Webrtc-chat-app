@@ -8,7 +8,6 @@ import MyProfile from "./pages/profile";
 import Errors from "./pages/error";
 import "./App.css";
 import "./devices style/style.css";
-import Loader from "./components/loader";
 import Feedback from "./pages/feedback";
 import { useContenctHook } from "./context/contextapi";
 import useScreenSize from "./hooks/useScreenSize";
@@ -98,7 +97,6 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Loader />
         <Routes>
           <Route path="/" element={mainpage()} />
           <Route

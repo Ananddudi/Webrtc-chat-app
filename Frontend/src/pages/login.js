@@ -3,9 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
+import { Cliploader } from "../components/loader";
 
 const Login = ({ login, setLogin }) => {
-  const { formValidation } = useContenctHook();
+  const { formValidation, users, auth, setLoading } = useContenctHook();
+  const [showLoader, setShowLoader] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams({
     email: "",
@@ -39,9 +41,9 @@ const Login = ({ login, setLogin }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth"] });
-      close();
     },
     onError: (mutationError) => {
+      setShowLoader(false);
       axiosapi.error(mutationError.response.data.message);
     },
   });
@@ -59,6 +61,7 @@ const Login = ({ login, setLogin }) => {
       return;
     }
 
+    setShowLoader(true);
     mutate({
       email: searchParams.get("email"),
       password: searchParams.get("password"),
@@ -89,6 +92,13 @@ const Login = ({ login, setLogin }) => {
       }));
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (users[0].email !== "NotInUse" && auth) {
+      setShowLoader(false);
+      close();
+    }
+  }, [users, auth]);
 
   return (
     <div className={`popupBackground ${login}`}>
@@ -127,11 +137,15 @@ const Login = ({ login, setLogin }) => {
               </span>
             )}
             <div className="btn-center">
-              <input
-                type="submit"
-                value="Submit"
-                className="commonBtn profilebtn mg"
-              />
+              <button type="submit" className="profilebtn mg loginbtn">
+                {showLoader ? (
+                  <div className="wait-loader">
+                    <Cliploader />
+                  </div>
+                ) : (
+                  <span>Submit</span>
+                )}
+              </button>
             </div>
           </div>
         </form>

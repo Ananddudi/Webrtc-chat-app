@@ -21,7 +21,7 @@ const connect = async (io, socket, onlineUsers) => {
     io.emit("onlineUsers", list);
     socket.broadcast.emit("online-status", rg_user.email);
   } catch (error) {
-    console.log("error in connect", error);
+    console.log("error in connect", error.message);
     formatter.ErrorHandling(socket, error);
   }
 };
@@ -38,7 +38,19 @@ const disconnect = (io, socket, onlineUsers) => {
       io.emit("onlineUsers", list);
       socket.broadcast.emit("offline-status", user.username);
     } catch (error) {
-      console.log("error in disconnect", error);
+      console.log("error in disconnect", error.message);
+      formatter.ErrorHandling(socket, error);
+    }
+  });
+};
+
+const getUsersWithPagination = async (socket) => {
+  socket.on("get-users", async (page, limit) => {
+    try {
+      const list = await updateAndGetList(undefined, undefined, page, limit);
+      socket.emit("add-users", list);
+    } catch (error) {
+      console.log("Error in get users with pagination", error.message);
       formatter.ErrorHandling(socket, error);
     }
   });
@@ -57,6 +69,7 @@ const getLastMessage = (socket) => {
 
       socket.emit(`last-message-${email}`, conversation, email);
     } catch (error) {
+      console.log("Error in getting last message", error.message);
       formatter.ErrorHandling(socket, error);
     }
   });
@@ -90,10 +103,16 @@ const sendMessage = (socket, onlineUsers) => {
       }
       socket.emit("recieve-message", { ...newmessage, position: "R" });
     } catch (error) {
-      console.log("error", error.message);
+      console.log("Error in sending message", error.message);
       formatter.ErrorHandling(socket, error);
     }
   });
 };
 
-module.exports = { connect, disconnect, sendMessage, getLastMessage };
+module.exports = {
+  connect,
+  disconnect,
+  sendMessage,
+  getLastMessage,
+  getUsersWithPagination,
+};

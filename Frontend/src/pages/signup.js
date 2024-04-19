@@ -3,9 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
+import { Cliploader } from "../components/loader";
 
 const Signup = ({ loginform, setLoginform }) => {
-  const { formValidation } = useContenctHook();
+  const { formValidation, users, auth } = useContenctHook();
+  const [showLoader, setShowLoader] = useState(false);
   const [getParams, setParams] = useSearchParams({
     fullname: "",
     email: "",
@@ -41,9 +43,9 @@ const Signup = ({ loginform, setLoginform }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth"] });
       axiosapi.success("Successfully logged in");
-      close();
     },
     onError: (mutationError) => {
+      setShowLoader(false);
       if (mutationError.response.status == 409) {
         axiosapi.error("This email is not available!", 5);
       } else {
@@ -65,7 +67,7 @@ const Signup = ({ loginform, setLoginform }) => {
       });
       return;
     }
-
+    setShowLoader(true);
     mutate({
       fullname: getParams.get("fullname"),
       email: getParams.get("email"),
@@ -110,6 +112,13 @@ const Signup = ({ loginform, setLoginform }) => {
       }));
     }
   }, [getParams]);
+
+  useEffect(() => {
+    if (users[0].email !== "NotInUse" && auth) {
+      setShowLoader(false);
+      close();
+    }
+  }, [users, auth]);
 
   return (
     <div className={`popupBackground ${loginform}`}>
@@ -157,11 +166,15 @@ const Signup = ({ loginform, setLoginform }) => {
               </span>
             )}
             <div className="btn-center">
-              <input
-                type="submit"
-                value="Submit"
-                className="commonBtn profilebtn mg"
-              />
+              <button type="submit" className="profilebtn mg loginbtn">
+                {showLoader ? (
+                  <div className="wait-loader">
+                    <Cliploader />
+                  </div>
+                ) : (
+                  <span>Submit</span>
+                )}
+              </button>
             </div>
           </div>
         </form>
