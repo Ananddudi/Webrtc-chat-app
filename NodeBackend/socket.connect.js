@@ -5,6 +5,7 @@ const {
   disconnect,
   sendMessage,
   getLastMessage,
+  getUsersWithPagination,
 } = require("./socketControllers.js/user");
 
 class OnlineUsers {
@@ -51,6 +52,7 @@ function connection(io) {
     // socket.request.headers.cookie
     connect(io, socket, onlineUsers);
     getLastMessage(socket);
+    getUsersWithPagination(socket);
     handleFile(socket, onlineUsers);
     sendMessage(socket, onlineUsers);
     handleConnection(socket, onlineUsers);

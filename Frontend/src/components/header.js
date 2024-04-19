@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Popup from "./popup";
 import Signup from "../pages/signup";
@@ -11,6 +11,31 @@ import Search from "./search";
 import { RiMenu3Fill } from "react-icons/ri";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { socket } from "../services/socket";
+import Signout from "./signout";
+
+const Links = ({ auth, setLoginform, setLogin, mutate }) => {
+  if (auth) {
+    return <Signout mutate={mutate} />;
+  }
+  return (
+    <>
+      <button
+        onClick={() => setLoginform("show")}
+        title="SignUp"
+        className="profile"
+      >
+        Sign up
+      </button>
+      <button
+        title="LogIn"
+        onClick={() => setLogin("show")}
+        className="profile"
+      >
+        Log in
+      </button>
+    </>
+  );
+};
 
 const Header = () => {
   const { auth, warning, setWarning } = useContenctHook();
@@ -61,7 +86,10 @@ const Header = () => {
   }, [login, loginform, showpopup, showMenu]);
 
   const { mutate } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (value = false) => {
+      if (value) {
+        setWarning({ login: false, logout: true });
+      }
       const result = await axiosapi.delete({
         url: "/logout-user",
       });
@@ -96,44 +124,9 @@ const Header = () => {
     };
     socket.on("exist", handleExistUser);
     return () => {
-      socket.on("exist", handleExistUser);
+      socket.off("exist", handleExistUser);
     };
   }, []);
-
-  const Links = memo(() => {
-    if (auth) {
-      return (
-        <button
-          title="Logout"
-          className="profile"
-          onClick={() => {
-            setWarning({ login: false, logout: true });
-            mutate();
-          }}
-        >
-          Sign Out
-        </button>
-      );
-    }
-    return (
-      <>
-        <button
-          onClick={() => setLoginform("show")}
-          title="SignUp"
-          className="profile"
-        >
-          Sign up
-        </button>
-        <button
-          title="LogIn"
-          onClick={() => setLogin("show")}
-          className="profile"
-        >
-          Log in
-        </button>
-      </>
-    );
-  });
 
   return (
     <main>
@@ -149,7 +142,12 @@ const Header = () => {
             >
               Profile
             </Link>
-            <Links />
+            <Links
+              mutate={mutate}
+              auth={auth}
+              setLoginform={setLoginform}
+              setLogin={setLogin}
+            />
           </div>
         </div>
         <Search />

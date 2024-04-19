@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./chatlist.css";
 import { useContenctHook } from "../context/contextapi";
 import { socket } from "../services/socket";
-import { d_formate } from "../services/dateFormate";
+import { d_formate } from "../utils/dateFormate";
 
 const ListItem = ({ item }) => {
   const [lstMessage, setLstmessage] = useState("No chat");
@@ -72,18 +72,69 @@ const ListItem = ({ item }) => {
   );
 };
 
-//dynamically importing images
 const Chatlist = ({ handleListData }) => {
-  const { filteredList } = useContenctHook();
+  const { filteredList, auth } = useContenctHook();
+  const [userlist, setUserList] = useState([]);
+  const [page, setPage] = useState(1);
+  const chatListRef = useRef();
+
+  const removeDuplicacy = (list) => {
+    let set = new Set();
+    return list
+      .map((value) => {
+        if (!set.has(value._id)) {
+          set.add(value._id);
+          return value;
+        }
+      })
+      .filter((value) => value !== undefined);
+  };
+
+  useEffect(() => {
+    const addUsersToList = (list) => {
+      setUserList((prev) => {
+        let val = removeDuplicacy([...prev, ...list]);
+        return val;
+      });
+    };
+    const handlePagination = () => {
+      let chatlist = chatListRef.current;
+      if (chatlist && auth) {
+        if (
+          chatlist.scrollHeight - chatlist.scrollTop ===
+          chatlist.clientHeight
+        ) {
+          let newpage = page + 1;
+          setPage(newpage);
+        }
+      }
+    };
+    chatListRef?.current?.addEventListener("scroll", handlePagination);
+    socket.on("add-users", addUsersToList);
+    return () => {
+      socket.off("add-users", addUsersToList);
+      chatListRef?.current?.removeEventListener("scroll", handlePagination);
+    };
+  }, [handleListData, auth]);
+
+  useEffect(() => {
+    setUserList(filteredList);
+    setPage(1);
+  }, [filteredList]);
+
+  useEffect(() => {
+    let limit = 10;
+    socket.emit("get-users", page, limit);
+  }, [page]);
 
   return (
-    <div className="chat-list-container">
-      {filteredList.length == 0 && (
+    <div className="chat-list-container" ref={chatListRef}>
+      {userlist.length == 0 && (
         <div className="user-not-found">
           <span>No User Found</span>
         </div>
       )}
-      {filteredList.map((item) => (
+      {userlist.map((item) => (
         <article
           key={item._id}
           className="chat-item"
