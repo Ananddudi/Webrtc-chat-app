@@ -93,7 +93,9 @@ const Chatlist = ({ handleListData }) => {
   useEffect(() => {
     const addUsersToList = (list) => {
       setUserList((prev) => {
-        let val = removeDuplicacy([...prev, ...list]);
+        let val = removeDuplicacy([...prev, ...list]).filter(
+          (obj) => obj.email !== auth.email
+        );
         return val;
       });
     };
