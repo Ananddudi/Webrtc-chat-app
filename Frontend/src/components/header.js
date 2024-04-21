@@ -10,7 +10,6 @@ import axiosapi from "../services/api";
 import Search from "./search";
 import { RiMenu3Fill } from "react-icons/ri";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { socket } from "../services/socket";
 import Signout from "./signout";
 
 const Links = ({ auth, setLoginform, setLogin, mutate }) => {
@@ -112,22 +111,6 @@ const Header = () => {
     }
   }, [showpopup, login, loginform, auth]);
 
-  useEffect(() => {
-    const handleExistUser = (value) => {
-      if (value) {
-        setWarning({ login: false, logout: false }); //hiding both login and logout warnings
-        mutate();
-        axiosapi.error("User is Already Online!", "toastError", 6);
-      } else {
-        axiosapi.success("Successfully logged in");
-      }
-    };
-    socket.on("exist", handleExistUser);
-    return () => {
-      socket.off("exist", handleExistUser);
-    };
-  }, []);
-
   return (
     <main>
       <nav className="navbar">
@@ -164,7 +147,7 @@ const Header = () => {
       </nav>
       <Popup showpopup={showpopup} />
       <Signup loginform={loginform} setLoginform={setLoginform} />
-      <Login login={login} setLogin={setLogin} />
+      <Login login={login} setLogin={setLogin} mutate={mutate} />
     </main>
   );
 };

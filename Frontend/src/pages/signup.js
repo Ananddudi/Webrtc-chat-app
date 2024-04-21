@@ -4,34 +4,27 @@ import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import { Cliploader } from "../components/loader";
+import { useFormValidation } from "../hooks/useFormvalidation";
 
 const Signup = ({ loginform, setLoginform }) => {
-  const { formValidation, users, auth } = useContenctHook();
+  const { users, auth } = useContenctHook();
+  const { error, onChange, setErrors } = useFormValidation();
   const [showLoader, setShowLoader] = useState(false);
   const [getParams, setParams] = useSearchParams({
     fullname: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState({
-    fullname: true,
-    email: true,
-    password: true,
-  });
 
   const queryClient = useQueryClient();
 
   const onChangeHandling = (key, value) => {
+    onChange(key, value);
     setParams((prev) => {
       prev.set(key, value);
       return prev;
     });
   };
-
-  const close = () => {
-    setLoginform("hide");
-  };
-
   const { mutate } = useMutation({
     mutationFn: async (postdata) => {
       const result = await axiosapi.post({
@@ -56,17 +49,19 @@ const Signup = ({ loginform, setLoginform }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const email = formValidation("email", getParams.get("email"));
-    const password = formValidation("password", getParams.get("password"));
-    const fullname = formValidation("fullname", getParams.get("fullname"));
-    if (!email || !password || !fullname) {
-      setError({
-        fullname,
-        email,
-        password,
-      });
+    if (!getParams.get("fullname")) {
+      setErrors("fullname");
       return;
     }
+    if (!getParams.get("email")) {
+      setErrors("email");
+      return;
+    }
+    if (!getParams.get("password")) {
+      setErrors("password");
+      return;
+    }
+    if (error.email || error.password) return;
     setShowLoader(true);
     mutate({
       fullname: getParams.get("fullname"),
@@ -75,48 +70,10 @@ const Signup = ({ loginform, setLoginform }) => {
     });
   };
 
-  //It is used for handling error indication
-  useEffect(() => {
-    if (
-      getParams.get("email") != "" &&
-      getParams.get("password") != "" &&
-      getParams.get("fullname") != ""
-    ) {
-      setError({
-        fullname: true,
-        email: true,
-        password: true,
-      });
-    }
-
-    if (getParams.get("fullname")) {
-      // if (getParams.get("fullname").length < 5) return;
-      setError((newpr) => ({
-        ...newpr,
-        fullname: formValidation("fullname", getParams.get("fullname")),
-      }));
-    }
-
-    if (getParams.get("email")) {
-      if (getParams.get("email").length < 5) return;
-      setError((newpr) => ({
-        ...newpr,
-        email: formValidation("email", getParams.get("email")),
-      }));
-    }
-
-    if (getParams.get("password")) {
-      setError((newpr) => ({
-        ...newpr,
-        password: formValidation("password", getParams.get("password")),
-      }));
-    }
-  }, [getParams]);
-
   useEffect(() => {
     if (users[0].email !== "NotInUse" && auth) {
       setShowLoader(false);
-      close();
+      setLoginform("hide");
     }
   }, [users, auth]);
 
@@ -126,9 +83,9 @@ const Signup = ({ loginform, setLoginform }) => {
         <form
           className={`
                   sign-up-form 
-                  ${!error.fullname ? "fullname" : ""} 
-                  ${error.email ? "" : "signEmail"} 
-                  ${error.password ? "" : "signPassword"}
+                  ${error.fullname ? "fullname" : ""} 
+                  ${error.email ? "signEmail" : ""} 
+                  ${error.password ? "signPassword" : ""}
                   `}
           onSubmit={onSubmit}
         >
@@ -159,11 +116,12 @@ const Signup = ({ loginform, setLoginform }) => {
               value={getParams.get("password")}
               onChange={(e) => onChangeHandling("password", e.target.value)}
             />
-            {error.password || (
-              <span className="error">
-                Password must have one lowercase, one uppercase and one a digit
-                character!
-              </span>
+            {error.password && (
+              <div className="error">
+                {window.innerWidth < 768
+                  ? "Provide one lowercase, one uppercase, one a digit"
+                  : " Password must have one lowercase, one uppercase and one a digit character!"}
+              </div>
             )}
             <div className="btn-center">
               <button type="submit" className="profilebtn mg loginbtn">

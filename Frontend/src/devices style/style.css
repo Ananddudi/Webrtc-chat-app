@@ -351,6 +351,12 @@
   .chat-list-container .chat-item .chat-info {
     width: 90%;
   }
+
+  .popupMain .sign-up-form .error {
+    width: 200px;
+    word-wrap: break-word;
+    padding: 0;
+  }
 }
 
 /* Media query for android */
