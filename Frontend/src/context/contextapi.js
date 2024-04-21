@@ -22,29 +22,6 @@ let ContextApiProvider = ({ children }) => {
 
   const [rtcAnswereData, setRtcAnswereData] = useState(null);
 
-  const formValidation = (key, value) => {
-    let result = false;
-    switch (key) {
-      case "fullname":
-        const regex = /[\s-]/;
-        result = regex.test(value);
-        break;
-      case "email":
-        result = validator.isEmail(value);
-        break;
-      case "password":
-        result =
-          validator.isLength(value, { min: 8 }) && // Minimum length of 8 characters
-          validator.matches(value, /[a-z]/) && // At least one lowercase letter
-          validator.matches(value, /[A-Z]/) && // At least one uppercase letter
-          validator.matches(value, /[0-9]/);
-        break;
-      default:
-        break;
-    }
-    return result;
-  };
-
   const authorization = async () => {
     const result = await axiosapi.get({ url: "/authentication-user" });
     return result.data;
@@ -108,7 +85,6 @@ let ContextApiProvider = ({ children }) => {
   });
 
   let globalObject = {
-    formValidation,
     setLoading,
     auth,
     users,

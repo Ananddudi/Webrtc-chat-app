@@ -4,29 +4,25 @@ import { useContenctHook } from "../context/contextapi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosapi from "../services/api";
 import { Cliploader } from "../components/loader";
+import { useFormValidation } from "../hooks/useFormvalidation";
+import { socket } from "../services/socket";
 
-const Login = ({ login, setLogin }) => {
-  const { formValidation, users, auth, setLoading } = useContenctHook();
+const Login = ({ login, setLogin, mutate: logoutMutate }) => {
+  const { users, auth, setWarning } = useContenctHook();
+  const { error, onChange, setErrors } = useFormValidation();
   const [showLoader, setShowLoader] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams({
     email: "",
     password: "",
   });
-  const [error, setError] = useState({
-    email: true,
-    password: true,
-  });
 
   const onChangeHandling = (key, value) => {
+    onChange(key, value);
     setSearchParams((prev) => {
       prev.set(key, value);
       return prev;
     });
-  };
-
-  const close = () => {
-    setLogin("hide");
   };
 
   const queryClient = useQueryClient();
@@ -50,17 +46,15 @@ const Login = ({ login, setLogin }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    let email = formValidation("email", searchParams.get("email"));
-    let password = formValidation("password", searchParams.get("password"));
-
-    if (!email || !password) {
-      setError({
-        email,
-        password,
-      });
+    if (!searchParams.get("email")) {
+      setErrors("email");
       return;
     }
-
+    if (!searchParams.get("password")) {
+      setErrors("password");
+      return;
+    }
+    if (error.email || error.password) return;
     setShowLoader(true);
     mutate({
       email: searchParams.get("email"),
@@ -68,37 +62,29 @@ const Login = ({ login, setLogin }) => {
     });
   };
 
-  //It is used for handling error indication
-  useEffect(() => {
-    if (searchParams.get("email") != "" && searchParams.get("password") != "") {
-      setError({
-        email: true,
-        password: true,
-      });
-    }
-
-    if (searchParams.get("email")) {
-      if (searchParams.get("email").length < 5) return;
-      setError((newpr) => ({
-        ...newpr,
-        email: formValidation("email", searchParams.get("email")),
-      }));
-    }
-
-    if (searchParams.get("password")) {
-      setError((newpr) => ({
-        ...newpr,
-        password: formValidation("password", searchParams.get("password")),
-      }));
-    }
-  }, [searchParams]);
-
   useEffect(() => {
     if (users[0].email !== "NotInUse" && auth) {
       setShowLoader(false);
-      close();
+      setLogin("hide");
     }
   }, [users, auth]);
+
+  useEffect(() => {
+    const handleExistUser = (value) => {
+      if (value) {
+        setWarning({ login: false, logout: false }); //hiding both login and logout warnings
+        logoutMutate();
+        setShowLoader(false);
+        axiosapi.error("User is Already Online!", "toastError", 6);
+      } else {
+        axiosapi.success("Successfully logged in");
+      }
+    };
+    socket.on("exist", handleExistUser);
+    return () => {
+      socket.off("exist", handleExistUser);
+    };
+  }, []);
 
   return (
     <div className={`popupBackground ${login}`}>
@@ -106,8 +92,8 @@ const Login = ({ login, setLogin }) => {
         <form
           className={`
           sign-up-form 
-          ${error.email ? "" : "loginEmail"} 
-          ${error.password ? "" : "loginPassword"}
+          ${error.email ? "loginEmail" : ""} 
+          ${error.password ? "loginPassword" : ""}
           `}
           onSubmit={onSubmit}
         >
@@ -130,11 +116,12 @@ const Login = ({ login, setLogin }) => {
               placeholder="Please enter password"
               onChange={(e) => onChangeHandling("password", e.target.value)}
             />
-            {error.password || (
-              <span className="error">
-                Password must have one lowercase, one uppercase and one a digit
-                character!
-              </span>
+            {error.password && (
+              <div className="error">
+                {window.innerWidth < 768
+                  ? "Provide one lowercase, one uppercase, one a digit"
+                  : " Password must have one lowercase, one uppercase and one a digit character!"}
+              </div>
             )}
             <div className="btn-center">
               <button type="submit" className="profilebtn mg loginbtn">
