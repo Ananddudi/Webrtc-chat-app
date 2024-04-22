@@ -1,0 +1,3 @@
+if you are suppose to deploy application on linux server or any shared,vps hosting you need to change package.json 
+react-router-dom creates problem so remove   "private": true, and add "homepage":".",
+------------------------------------------------------------------------------------------------------------------
